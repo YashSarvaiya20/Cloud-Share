@@ -119,7 +119,7 @@ RAZORPAY_SECRET=your_secret
 
 ## 🧑‍💻 Author
 
-* Your Name
+* Yash Sarvaiya
 
 ---
 
