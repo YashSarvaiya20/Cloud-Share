@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Copy, Download, File, Info, Share2 } from "lucide-react";
+import { useAuth } from "@clerk/clerk-react";
 
 import apiEndpoint from "../util/apiEndpoint";
 import LinkShareModal from "../components/LinkShareModal";
 
 const PublicFileView = () => {
   const { fileId } = useParams();
+  const { getToken } = useAuth();
 
   const [file, setFile] = useState(null);
   const [error, setError] = useState(null);
@@ -23,10 +25,28 @@ const PublicFileView = () => {
       setIsLoading(true);
       try {
         const res = await axios.get(apiEndpoint.GET_PUBLIC_FILE(fileId));
-        setFile(res.data.file);
+        setFile(res.data?.file ?? res.data ?? null);
         setError(null);
       } catch (err) {
-        if (err.response?.status === 404) {
+        if (err.response?.status === 403) {
+          try {
+            const token = await getToken();
+
+            if (!token) {
+              setError("This file is private. Please sign in with the owner account.");
+            } else {
+              const viewRes = await axios.get(apiEndpoint.VIEW_FILE(fileId), {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+              setFile(viewRes.data?.file ?? viewRes.data ?? null);
+              setError(null);
+            }
+          } catch {
+            setError("This file is private or you do not have access.");
+          }
+        } else if (err.response?.status === 404) {
           setError("File not found or link expired.");
         } else {
           setError(
@@ -39,16 +59,21 @@ const PublicFileView = () => {
     };
 
     if (fileId) getFile();
-  }, [fileId]);
+  }, [fileId, getToken]);
 
   const handleDownload = async () => {
     if (!file) return;
 
     try {
-      const response = await axios.get(
-        apiEndpoint.DOWNLOAD_FILE(fileId),
-        { responseType: "blob" }
-      );
+      const token = await getToken();
+      const response = await axios.get(apiEndpoint.DOWNLOAD_FILE(fileId), {
+        responseType: "blob",
+        headers: token
+          ? {
+              Authorization: `Bearer ${token}`,
+            }
+          : undefined,
+      });
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -58,7 +83,7 @@ const PublicFileView = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (err) {
+    } catch {
       toast.error("Sorry, the file could not be downloaded.");
     }
   };
@@ -142,10 +167,12 @@ const PublicFileView = () => {
 
             {/* Size + Date */}
             <p className="text-sm text-gray-500 mt-2">
-              {(file.size / 1024).toFixed(2)} KB
+              {((file.size || 0) / 1024).toFixed(2)} KB
               <span className="mx-2">&bull;</span>
               Shared on{" "}
-              {new Date(file.uploadedAt).toLocaleDateString()}
+              {file.uploadedAt
+                ? new Date(file.uploadedAt).toLocaleDateString()
+                : "Unknown"}
             </p>
 
             {/* File Type Badge */}
@@ -191,14 +218,16 @@ const PublicFileView = () => {
               <div className="flex justify-between">
                 <span className="text-gray-500">File Size:</span>
                 <span className="text-gray-800 font-medium">
-                  {(file.size / 1024).toFixed(2)} KB
+                  {((file.size || 0) / 1024).toFixed(2)} KB
                 </span>
               </div>
 
               <div className="flex justify-between">
                 <span className="text-gray-500">Shared:</span>
                 <span className="text-gray-800 font-medium">
-                  {new Date(file.uploadedAt).toLocaleDateString()}
+                  {file.uploadedAt
+                    ? new Date(file.uploadedAt).toLocaleDateString()
+                    : "Unknown"}
                 </span>
               </div>
             </div>
@@ -219,7 +248,7 @@ const PublicFileView = () => {
       <LinkShareModal
         isOpen={shareModal.isOpen}
         onClose={closeShareModal}
-        link={shareModal.link}
+        shareUrl={shareModal.link}
         title="Share File"
       />
     </div>

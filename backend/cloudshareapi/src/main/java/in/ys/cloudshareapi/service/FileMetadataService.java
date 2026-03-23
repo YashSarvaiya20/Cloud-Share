@@ -5,6 +5,8 @@ import in.yashsarvaiya.cloudshareapi.document.ProfileDocument;
 import in.yashsarvaiya.cloudshareapi.dto.FileMetadataDTO;
 import in.yashsarvaiya.cloudshareapi.repository.FileMetadataRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,8 +56,9 @@ public class FileMetadataService {
 
         return List.of(files).stream().map(file -> {
             try {
-                String fileName = UUID.randomUUID() + "." +
-                        StringUtils.getFilenameExtension(file.getOriginalFilename());
+                                String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
+                                String fileName = UUID.randomUUID() +
+                                                (StringUtils.hasText(extension) ? "." + extension : "");
 
                 Path targetLocation = uploadPath.resolve(fileName);
                 Files.copy(
@@ -122,6 +125,18 @@ public class FileMetadataService {
     }
 
     // ---------------- DOWNLOAD FILE ----------------
+    public FileMetadataDTO getViewableFile(String id) {
+
+        FileMetadataDocument file = fileMetadataRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResponseStatusException(NOT_FOUND, "File not found")
+                );
+
+        validateFileAccess(file);
+        return mapToDTO(file);
+    }
+
+    // ---------------- DOWNLOAD FILE ----------------
     public FileMetadataDTO getDownloadableFile(String id) {
 
         FileMetadataDocument file = fileMetadataRepository.findById(id)
@@ -129,7 +144,29 @@ public class FileMetadataService {
                         new ResponseStatusException(NOT_FOUND, "File not found")
                 );
 
+        validateFileAccess(file);
+
         return mapToDTO(file);
+    }
+
+    private void validateFileAccess(FileMetadataDocument file) {
+        if (Boolean.TRUE.equals(file.getIsPublic())) {
+            return;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null
+                && authentication.isAuthenticated()
+                && !"anonymousUser".equals(authentication.getName());
+
+        if (!isAuthenticated) {
+            throw new ResponseStatusException(FORBIDDEN, "Private file cannot be accessed");
+        }
+
+        ProfileDocument currentProfile = profileService.getCurrentProfile();
+        if (!file.getClerkId().equals(currentProfile.getClerkId())) {
+            throw new ResponseStatusException(FORBIDDEN, "File does not belong to current user");
+        }
     }
 
     // ---------------- DELETE FILE ----------------

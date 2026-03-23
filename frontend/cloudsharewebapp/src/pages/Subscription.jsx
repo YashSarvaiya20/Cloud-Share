@@ -13,7 +13,7 @@ const Subscription = () => {
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
-  const { credits, fetchUserCredits, setCredits } = useContext(UserCreditsContext);
+  const { credits, fetchUserCredits, updateCredits } = useContext(UserCreditsContext);
   const { getToken } = useAuth();
   const razorpayScriptRef = useRef(null);
 
@@ -112,7 +112,10 @@ const Subscription = () => {
         setMessage('');
        try{
         // Simulate API call to create order and get Razorpay options
-        const token=await getToken({ template: 'codehooks' });
+        const token = await getToken();
+        if (!token) {
+          throw new Error('User not authenticated');
+        }
         const response=await axios.post(apiEndpoint.CREATE_ORDER,{
             planId:plan.id,
             amount:plan.price,
@@ -124,6 +127,10 @@ const Subscription = () => {
             }
          }
         );
+
+        if (!response.data?.success || !response.data?.orderId) {
+          throw new Error(response.data?.message || 'Failed to create payment order');
+        }
        
       const options = {
           key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -135,6 +142,7 @@ const Subscription = () => {
           handler: async function (response) {
               try {
                   // Simulate API call to verify payment
+                  const verifyToken = await getToken();
                   const verifyResponse = await axios.post(apiEndpoint.VERIFY_PAYMENT, {
                       razorpay_order_id: response.razorpay_order_id,
                       razorpay_payment_id: response.razorpay_payment_id,
@@ -142,25 +150,23 @@ const Subscription = () => {
                       planId: plan.id
                   },{
                       headers:{
-                          Authorization:`Bearer ${token}`
+                          Authorization:`Bearer ${verifyToken}`
                       }
                   });
                   if (verifyResponse.data.success) {
-                      if(verifyResponse.data.creditsAdded){
-                          console.log('Updating credits to:', verifyResponse.data.newCreditBalance);
-                          setCredits(verifyResponse.data.newCreditBalance);
-                      }else{
-                          console.log('Credits not in response, fetching updated credits from server');
-                         await fetchUserCredits();
+                      const updatedCredits = verifyResponse.data.newCreditBalance ?? verifyResponse.data.credits;
+                      if (typeof updatedCredits === 'number') {
+                        updateCredits(updatedCredits);
                       }
-                      setMessage(`Payment successful! ${plan.name} plan activated.`);
+                      await fetchUserCredits();
+                      setMessage(`Payment successful! ${plan.name} plan activated. Credits updated.`);
                       setMessageType('success');
                   }else{
-                      setMessage('Payment verification failed. Please contact support if you were charged.');
+                      setMessage(verifyResponse.data?.message || 'Payment verification failed. Please contact support if you were charged.');
                       setMessageType('error');
                   }
               } catch(error){
-                  setMessage('Failed to process payment. Please try again.');
+                    setMessage(error?.response?.data?.message || 'Failed to process payment. Please try again.');
                   setMessageType('error');
               } 
           },
@@ -179,7 +185,7 @@ const Subscription = () => {
         throw new Error('Razorpay SDK not loaded');
       }
        }catch(error){
-        setMessage('Failed to initiate payment. Please try again later.');
+        setMessage(error?.response?.data?.message || error?.message || 'Failed to initiate payment. Please try again later.');
         setMessageType('error');
        }finally{
          setProcessingPayment(false);

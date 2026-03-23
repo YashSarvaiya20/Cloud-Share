@@ -50,7 +50,10 @@ const Upload = ()=>{
         files.forEach((file)=>formData.append("files",file));
 
         try{
-            const token=await getToken({template:"codehooks"});
+            const token = await getToken();
+            if (!token) {
+                throw new Error("User not authenticated");
+            }
             const response=await axios.post(apiEndpoint.UPLOAD_FILES,formData,{
                 headers:{
                     Authorization:`Bearer ${token}`,

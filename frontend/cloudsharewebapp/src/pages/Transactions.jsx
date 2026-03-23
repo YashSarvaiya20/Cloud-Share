@@ -16,13 +16,19 @@ const Transactions=()=>{
             setLoading(true);
             setError(null);
             try {
-                const token = await getToken({ template: 'codehooks' });
+                const token = await getToken();
+                if (!token) {
+                    throw new Error('User not authenticated');
+                }
                 const response = await axios.get(apiEndpoint.GET_TRANSACTIONS, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                setTransactions(response.data?.transactions || []);
+                const transactionsData = Array.isArray(response.data)
+                    ? response.data
+                    : (Array.isArray(response.data?.transactions) ? response.data.transactions : []);
+                setTransactions(transactionsData);
                 setError(null);
             } catch (error) {
                 setError('Failed to fetch transactions. Please try again later.');
@@ -40,7 +46,7 @@ const Transactions=()=>{
     }
 
     const formateAmount = (amount) => {
-        return `₹${(amount / 100).toFixed(2)}`;
+        return `₹${Number(amount || 0).toFixed(2)}`;
     }
     const safeTransactions = Array.isArray(transactions) ? transactions : [];
     return (
@@ -84,12 +90,12 @@ const Transactions=()=>{
                             <tbody className='divide-y divide-gray-200'>
                                 {safeTransactions.map((txn) => (
                                     <tr key={txn.id} className='hover:bg-gray-50'>
-                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{formatDate(txn.createdAt)}</td>
-                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{txn.planName==='premium'
+                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{formatDate(txn.transactionDate)}</td>
+                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{txn.planId==='premium'
                                             ? "Premium Plan"
-                                        :txn.planName==="ultimate" ? "Ultimate Plan" : "Basic Plan"}</td>
+                                        :txn.planId==="ultimate" ? "Ultimate Plan" : "Basic Plan"}</td>
                                         <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{formateAmount(txn.amount)}</td>
-                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{txn.credits}</td>
+                                        <td className='py-4 px-6 whitespace-nowrap text-sm text-gray-900'>{txn.creditsAdded ?? 0}</td>
                                         <td className='py-4 px-6 whitespace-nowrap text-sm font-medium text-gray-500'>{txn.paymentId?txn.paymentId.substring(0,12)+ "..." : "N/A"}</td>
                                         </tr>
                                 ))}

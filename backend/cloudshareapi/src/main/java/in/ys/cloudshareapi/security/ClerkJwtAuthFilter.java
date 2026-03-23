@@ -39,10 +39,10 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
 //        System.out.println("ContextPath = " + request.getContextPath());
 //        System.out.println("ServletPath = " + request.getServletPath());
 
-        return uri.startsWith("/api/v1.0/files/download/")
-                ||uri.startsWith("/api/v1.0/webhooks/")
-                || uri.startsWith("/api/v1.0/files/public/")
-                || uri.startsWith("/api/v1.0/payments/")
+        return uri.contains("/files/download/")
+            || uri.contains("/files/view/")
+            || uri.contains("/webhooks/")
+            || uri.contains("/files/public/")
                // || uri.startsWith("/api/v1.0/transactions/")
                 || "OPTIONS".equalsIgnoreCase(request.getMethod());
     }

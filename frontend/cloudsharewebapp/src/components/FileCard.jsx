@@ -75,11 +75,9 @@ const FileCard = ({ file,onDelete,onTogglePublic,onDownload,onShareLink }) => {
                             <Copy size={18} />
                         </button>
                         )}
-                        {file.isPublic &&  (
-                            <a href={`/file/${file.id}`} title='View file' target="_blank" rel="noreferrer" className='p-2 bg-white/90 rounded-fu;; hover:bg-white transition-colors text-gray-700 hover:text-gray-900'>
-                                <Eye size={18} />
-                            </a>
-                        )}
+                        <a href={`/file/${file.id}`} title='View file' target="_blank" rel="noreferrer" className='p-2 bg-white/90 rounded-full hover:bg-white transition-colors text-gray-700 hover:text-gray-900'>
+                            <Eye size={18} />
+                        </a>
                         <button
                         onClick={()=>onDownload(file)} 
                         title='Download'

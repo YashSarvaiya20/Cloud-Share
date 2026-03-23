@@ -36,24 +36,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
-
-                            .requestMatchers(HttpMethod.POST, "/payments/create-order").permitAll()
-                        .requestMatchers("/payments/**").permitAll()
-                            // ✅ PUBLIC ENDPOINTS
-                        .requestMatchers("/webhooks/**").permitAll()
-                        .requestMatchers("/api/v1.0/files/public/**").permitAll()
-                        .requestMatchers("/api/v1.0/files/download/**").permitAll()
-
-                            // ✅ PREFLIGHT
-                   //     .requestMatchers("/transactions/").permitAll()
-                            .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                        // 🔒 PROTECTED
-
-                        .requestMatchers(HttpMethod.POST, "/api/v1.0/files/upload").authenticated()
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1.0/files/**").authenticated()
-
-                        .anyRequest().authenticated()
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                .anyRequest().permitAll()
                 )
 
                 // ✅ STATELESS API
@@ -76,7 +60,10 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:5173"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://localhost:*",
+                "http://127.0.0.1:*"
+        ));
         config.setAllowedMethods(List.of(
                 "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"
         ));

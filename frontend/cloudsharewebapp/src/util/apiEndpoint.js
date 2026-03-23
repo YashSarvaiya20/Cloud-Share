@@ -10,5 +10,6 @@ const apiEndpoint = {
     VERIFY_PAYMENT: `${BASE_URL}/payments/verify-payment`,
     GET_TRANSACTIONS: `${BASE_URL}/transactions`,
     GET_PUBLIC_FILE: (id) => `${BASE_URL}/files/public/${id}`,
+    VIEW_FILE: (id) => `${BASE_URL}/files/view/${id}`,
 };
 export default apiEndpoint ;

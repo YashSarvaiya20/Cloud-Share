@@ -1,67 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Upload, X, File } from "react-feather";
-import { useAuth } from "@clerk/clerk-react";
-import axios from "axios";
-import toast from "react-hot-toast";
-import apiEndpoint from "../../util/apiEndpoint";
-import { useNavigate } from "react-router-dom";
 
-const UploadBox = () => {
-  const { getToken } = useAuth();
-  const navigate = useNavigate();
-
-  const [files, setFiles] = useState([]);
-  const [uploading, setUploading] = useState(false);
-
-  // handle file selection
-  const handleFileChange = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles((prev) => [...prev, ...selectedFiles]);
-  };
-
-  // remove a file
-  const removeFile = (index) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  // upload files
-  const handleUpload = async () => {
-    if (files.length === 0) {
-      toast.error("Please select at least one file");
-      return;
-    }
-
-    try {
-      setUploading(true);
-
-      const token = await getToken({ template: "codehooks" });
-      if (!token) {
-        toast.error("Authentication failed");
-        return;
-      }
-
-      const formData = new FormData();
-      files.forEach((file) => formData.append("files", file));
-
-      await axios.post(apiEndpoint.UPLOAD_FILES, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      toast.success("Files uploaded successfully");
-      setFiles([]);
-      navigate("/my-files");
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast.error(
-        error.response?.data?.message || "Error uploading files"
-      );
-    } finally {
-      setUploading(false);
-    }
-  };
+const UploadBox = ({
+  files = [],
+  onFileChange,
+  onRemoveFile,
+  onUpload,
+  uploading = false,
+  isUploadDisabled = false,
+  remainingCredits,
+}) => {
 
   return (
     <div className="bg-white rounded-lg shadow p-8 max-w-3xl mx-auto">
@@ -82,7 +30,7 @@ const UploadBox = () => {
           type="file"
           multiple
           className="hidden"
-          onChange={handleFileChange}
+          onChange={onFileChange}
         />
       </label>
 
@@ -112,7 +60,7 @@ const UploadBox = () => {
                 </div>
 
                 <button
-                  onClick={() => removeFile(index)}
+                  onClick={() => onRemoveFile(index)}
                   className="text-gray-400 hover:text-red-500"
                 >
                   <X size={18} />
@@ -125,19 +73,17 @@ const UploadBox = () => {
 
       {/* Actions */}
       <div className="flex justify-end gap-3 mt-8">
-        <button
-          onClick={() => navigate("/my-files")}
-          className="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50"
-          disabled={uploading}
-        >
-          Cancel
-        </button>
+        {typeof remainingCredits === "number" ? (
+          <p className="mr-auto text-sm text-gray-600 self-center">
+            Remaining credits: {remainingCredits}
+          </p>
+        ) : null}
 
         <button
-          onClick={handleUpload}
-          disabled={uploading}
+          onClick={onUpload}
+          disabled={uploading || isUploadDisabled}
           className={`px-6 py-2 rounded-md text-white font-medium transition ${
-            uploading
+            uploading || isUploadDisabled
               ? "bg-purple-300 cursor-not-allowed"
               : "bg-purple-500 hover:bg-purple-600"
           }`}

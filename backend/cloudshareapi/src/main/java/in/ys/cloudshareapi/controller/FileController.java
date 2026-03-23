@@ -5,7 +5,6 @@ import in.yashsarvaiya.cloudshareapi.dto.FileMetadataDTO;
 import in.yashsarvaiya.cloudshareapi.service.FileMetadataService;
 import in.yashsarvaiya.cloudshareapi.service.UserCreditsService;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -14,15 +13,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOError;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,15 +62,45 @@ public class FileController {
         return ResponseEntity.ok(file);
     }
 
+    @GetMapping("/view/{id}")
+    public ResponseEntity<?> getViewableFile(@PathVariable String id){
+        FileMetadataDTO file = fileMetadataService.getViewableFile(id);
+        return ResponseEntity.ok(file);
+    }
+
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) throws IOException {
-        System.out.println("🔥 FILE download CONTROLLER HIT 🔥");
         FileMetadataDTO downloadableFile=fileMetadataService.getDownloadableFile(id);
-       Path path= Paths.get(downloadableFile.getFileLocation());
+       Path path = resolveDownloadPath(downloadableFile.getFileLocation());
        Resource resource=new UrlResource(path.toUri());
+
+       if (!resource.exists() || !resource.isReadable()) {
+           throw new ResponseStatusException(NOT_FOUND, "File not found on disk");
+       }
+
        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment; filename=\""+downloadableFile.getName()+"\"")
                .body(resource);
+    }
+
+    private Path resolveDownloadPath(String rawLocation) {
+        Path original = Paths.get(rawLocation);
+        List<Path> candidates = new ArrayList<>();
+        candidates.add(original);
+
+        if (original.getFileName() != null) {
+            candidates.add(Paths.get("upload").resolve(original.getFileName()));
+            candidates.add(Paths.get("uploads").resolve(original.getFileName()));
+        }
+
+        for (Path candidate : candidates) {
+            Path normalized = candidate.toAbsolutePath().normalize();
+            if (normalized.toFile().exists() && normalized.toFile().canRead()) {
+                return normalized;
+            }
+        }
+
+        return original.toAbsolutePath().normalize();
     }
 
     @DeleteMapping("/{id}")

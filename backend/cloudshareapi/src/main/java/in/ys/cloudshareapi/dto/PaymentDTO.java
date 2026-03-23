@@ -21,4 +21,6 @@ public class PaymentDTO {
     private Boolean success;
     private String message;
     private String orderId;
+    private Integer creditsAdded;
+    private Integer newCreditBalance;
 }

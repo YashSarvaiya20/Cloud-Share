@@ -101,7 +101,9 @@ public class ProfileService {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null
+            || !authentication.isAuthenticated()
+            || "anonymousUser".equals(authentication.getName())) {
             throw new UsernameNotFoundException("User not authenticated");
         }
 

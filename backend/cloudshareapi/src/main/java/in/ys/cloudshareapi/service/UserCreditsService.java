@@ -51,4 +51,12 @@ public class UserCreditsService {
        userCredits.setPlan(plan);
       return userCreditsRepository.save(userCredits);
     }
+
+    public UserCredits addCredits(String clerkId, Integer creditsToAdd) {
+        UserCredits userCredits = userCreditsRepository.findByClerkId(clerkId)
+                .orElseGet(() -> createInitialCredits(clerkId));
+
+        userCredits.setCredits(userCredits.getCredits() + creditsToAdd);
+        return userCreditsRepository.save(userCredits);
+    }
 }

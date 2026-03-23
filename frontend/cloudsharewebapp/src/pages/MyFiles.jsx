@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { List, Grid, Globe, Download, Trash, File, Lock, Copy } from 'react-feather';
 import { Eye } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layout/DashboardLayout';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
@@ -11,6 +11,7 @@ import { Video } from 'lucide-react';
 import { Music } from 'react-feather';
 import { Image } from 'react-feather';
 import { FileText } from 'react-feather';
+import { File as FileIcon } from 'react-feather';
 import apiEndpoint from '../util/apiEndpoint';
 import ConfirmationDialog from '../components/ConfirmationDailog';
 import LinkShareModal from '../components/LinkShareModal';
@@ -82,32 +83,26 @@ const togglePublic= async(fileToUpdate)=>{
 const handleDownload= async(file)=>{
     try {
         const token = await getToken();
-        console.log("token",token);
         const response = await axios.get(apiEndpoint.DOWNLOAD_FILE(file.id), {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
             responseType: 'blob', // important for file download
         })
-        // // create a URL for the file blob and trigger download
-        // console.log("HEADERS 👉", response.headers);
 
-        // const url = window.URL.createObjectURL(new Blob([response.data]));
-        // const link = document.createElement('a');
-        // link.href = url;
-        // link.setAttribute('download', file.name);
-        // document.body.appendChild(link);
-        // link.click();
-        // link.remove();
-        // window.URL.revokeObjectURL(url); // clean up the URL object
+        const blobUrl = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = blobUrl;
+        link.setAttribute('download', file.name || 'download');
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(blobUrl);
+        toast.success('File downloaded successfully');
     }
     catch (error) { 
-          console.log("DOWNLOAD ERROR FULL 👉", error);
-    console.log("RESPONSE 👉", error.response);
-    console.log("STATUS 👉", error.response?.status);
-    console.log("DATA 👉", error.response?.data);
         console.error("Error downloading file:", error);
-        toast.error("Error downloading file",error.message);
+        toast.error(error?.response?.data?.message || "Error downloading file");
     }
 }
 // closes the delete confirmation dialog
@@ -132,7 +127,7 @@ const handleDelete = async () => {
             },
         });
        if(response.status===204){
-        setFiles(files.filter((file) => file.id !== fileId));
+        setFiles((prevFiles) => prevFiles.filter((file) => file.id !== fileId));
         closeDeletedConfirmation();
        }else {
         toast.error("Error deleting file");
@@ -140,12 +135,12 @@ const handleDelete = async () => {
         toast.success("File deleted successfully");
     } catch (error) {
         console.error("Error deleting file:", error);
-        toast.error("Error deleting file",error.message);
+        toast.error(error?.response?.data?.message || "Error deleting file");
     }
 }
 // open share link modal
 const openShareModal = (fileId) => {
-    const link=`${window.location.origin}/files/${fileId}`;
+    const link=`${window.location.origin}/file/${fileId}`;
     setShareModal({ isOpen: true, fileId, link });
 }
 // close share link modal
@@ -278,8 +273,7 @@ const getFileIcon = (file) => {
                                                 </button>
                                             </div>
                                             <div className="flex justify-center">
-                                            {file.isPublic === true || file.isPublic === 'PUBLIC' ? (
-                                                <a href={`/files/${file.id}`}
+                                                <a href={`/file/${file.id}`}
                                                 className="text-gray-500 hover:text-blue-600"
                                                 title="View file"
                                                 target="_blank"
@@ -287,9 +281,6 @@ const getFileIcon = (file) => {
                                                 >
                                                 <Eye size={18} />
                                                 </a>
-                                            ) : (
-                                                <span className="w-[18px]" />
-                                            )}
                                             </div>  
                                         </div>
                                     </td>

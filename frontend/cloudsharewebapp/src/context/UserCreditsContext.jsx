@@ -20,7 +20,8 @@ import { useEffect } from "react";
         if(!isSignedIn) return;
         setLoading(true);
         try{
-            const token=await getToken({template:"codehooks"});
+            const token=await getToken();
+            if (!token) return;
           const response= await axios.get(apiEndpoint.GET_CREDITS,{
                 headers:{
                     Authorization:`Bearer ${token}`

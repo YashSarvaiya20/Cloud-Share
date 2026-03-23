@@ -97,22 +97,38 @@ public class PaymentService {
     // =========================
     public PaymentDTO verifyPayment(PaymentVerificationDTO request) {
         try {
+                        ProfileDocument currentProfile = profileService.getCurrentProfile();
+                        String currentClerkId = currentProfile.getClerkId();
+
             PaymentTransaction transaction =
                     paymentTransactionRepository
                             .findByOrderId(request.getRazorpay_order_id())
                             .orElseThrow(() ->
                                     new RuntimeException("Transaction not found"));
 
+                        boolean wasAnonymousTransaction = "anonymousUser".equals(transaction.getClerkId());
+
+                        if (!currentClerkId.equals(transaction.getClerkId())) {
+                                transaction.setClerkId(currentClerkId);
+                                paymentTransactionRepository.save(transaction);
+                        }
+
             // Prevent double credit
             if ("SUCCESS".equals(transaction.getStatus())) {
+                                if (wasAnonymousTransaction && transaction.getCreditsAdded() > 0) {
+                                        userCreditsService.addCredits(currentClerkId, transaction.getCreditsAdded());
+                                }
+
+                                int currentCredits = userCreditsService
+                                                .getUserCredits(currentClerkId)
+                                                .getCredits();
+
                 return PaymentDTO.builder()
                         .success(true)
                         .message("Payment already verified")
-                        .credits(
-                                userCreditsService
-                                        .getUserCredits(transaction.getClerkId())
-                                        .getCredits()
-                        )
+                        .credits(currentCredits)
+                        .creditsAdded(transaction.getCreditsAdded())
+                        .newCreditBalance(currentCredits)
                         .build();
             }
 
@@ -162,7 +178,7 @@ public class PaymentService {
             }
 
             userCreditsService.addCredits(
-                    transaction.getClerkId(),
+                    currentClerkId,
                     credits,
                     plan
             );
@@ -174,14 +190,16 @@ public class PaymentService {
                     credits
             );
 
+            int updatedCredits = userCreditsService
+                    .getUserCredits(currentClerkId)
+                    .getCredits();
+
             return PaymentDTO.builder()
                     .success(true)
                     .message("Payment verified and credits added")
-                    .credits(
-                            userCreditsService
-                                    .getUserCredits(transaction.getClerkId())
-                                    .getCredits()
-                    )
+                    .credits(updatedCredits)
+                    .creditsAdded(credits)
+                    .newCreditBalance(updatedCredits)
                     .build();
 
         } catch (Exception e) {
