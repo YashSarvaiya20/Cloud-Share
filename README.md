@@ -111,11 +111,6 @@ RAZORPAY_SECRET=your_secret
 
 ---
 
-## 📸 UI Preview
-
-(Add screenshots here)
-
----
 
 ## 🧑‍💻 Author
 
