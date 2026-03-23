@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: cloud-share-backend
+    env: java
+    rootDir: backend/cloudshareapi
+    buildCommand: mvn clean install
+    startCommand: java -jar target/*.jar
