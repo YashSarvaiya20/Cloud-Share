@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+*{
+  font-family: 'Urbanist', sans-serif;
+}
+
+.landing-page {
+  @apply overflow-y-auto h-screen;
+}
+
+/* Landing Page Content */
+.landing-page-content {
+  @apply overflow-visible;
+}
+
+/* Card Button */
+.card-btn {
+  @apply flex items-center gap-3 text-[12px] 
+         font-medium text-gray-600 
+         hover:text-purple-600;
+}
+
+/* Add Button (Outlined / Light) */
+.add-btn {
+  @apply flex items-center gap-1.5 
+         text-xs md:text-sm 
+         font-medium text-green-700 
+         bg-green-100 px-4 py-2 
+         rounded-lg hover:bg-green-200;
+}
+
+/* Filled Button */
+.add-btn-fill {
+  @apply text-white bg-purple-600 hover:bg-purple-700;
+} 
