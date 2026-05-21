@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class FileController {
     )
     public ResponseEntity<?> uploadFiles(
             @RequestParam("files") MultipartFile[] files
-    ) throws IOException {
+        ) {
 
        // System.out.println("🔥 FILE UPLOAD CONTROLLER HIT 🔥");
 
@@ -71,11 +72,10 @@ public class FileController {
     @GetMapping("/download/{id}")
     public ResponseEntity<Resource> download(@PathVariable String id) throws IOException {
         FileMetadataDTO downloadableFile=fileMetadataService.getDownloadableFile(id);
-       Path path = resolveDownloadPath(downloadableFile.getFileLocation());
-       Resource resource=new UrlResource(path.toUri());
+       Resource resource = resolveDownloadResource(downloadableFile.getFileLocation());
 
        if (!resource.exists() || !resource.isReadable()) {
-           throw new ResponseStatusException(NOT_FOUND, "File not found on disk");
+           throw new ResponseStatusException(NOT_FOUND, "File not found");
        }
 
        return ResponseEntity.ok().contentType(MediaType.APPLICATION_OCTET_STREAM)
@@ -83,7 +83,11 @@ public class FileController {
                .body(resource);
     }
 
-    private Path resolveDownloadPath(String rawLocation) {
+    private Resource resolveDownloadResource(String rawLocation) throws IOException {
+        if (rawLocation != null && (rawLocation.startsWith("http://") || rawLocation.startsWith("https://"))) {
+            return new UrlResource(URI.create(rawLocation));
+        }
+
         Path original = Paths.get(rawLocation);
         List<Path> candidates = new ArrayList<>();
         candidates.add(original);
@@ -96,11 +100,11 @@ public class FileController {
         for (Path candidate : candidates) {
             Path normalized = candidate.toAbsolutePath().normalize();
             if (normalized.toFile().exists() && normalized.toFile().canRead()) {
-                return normalized;
+                return new UrlResource(normalized.toUri());
             }
         }
 
-        return original.toAbsolutePath().normalize();
+        return new UrlResource(original.toAbsolutePath().normalize().toUri());
     }
 
     @DeleteMapping("/{id}")

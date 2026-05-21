@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class FileMetadataDocument {
     @Id
     private String id;
+    private String publicId;
     private String name;
     private String type;
     private String clerkId;

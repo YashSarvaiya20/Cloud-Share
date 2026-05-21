@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import React from "react";
 const DashboardUpload = ({
@@ -8,8 +8,11 @@ const DashboardUpload = ({
   onUpload,
   uploading,
   remainingUploads,
+  isUploadDisabled = false,
+  uploadProgress = 0,
 }) => {
   const fileInputRef = useRef(null);
+  const [isDragActive, setIsDragActive] = useState(false);
 
   const handleClick = () => {
     fileInputRef.current?.click();
@@ -22,12 +25,18 @@ const DashboardUpload = ({
 
   const handleDrop = (e) => {
     e.preventDefault();
+    setIsDragActive(false);
     const droppedFiles = Array.from(e.dataTransfer.files || []);
     emitSelectedFiles(droppedFiles);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragActive(false);
   };
 
   const formatFileSize = (size) => {
@@ -38,10 +47,10 @@ const DashboardUpload = ({
   };
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-4 md:p-5">
-      <div className="mb-3 flex items-center justify-between">
-        <p className="font-semibold text-gray-800">Upload Files</p>
-        <p className="text-xs font-medium text-gray-500">
+    <div className="glass-card p-4 md:p-5">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <p className="text-base font-semibold text-slate-900">Quick Upload</p>
+        <p className="rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-600">
           {remainingUploads} of 5 files remaining
         </p>
       </div>
@@ -50,11 +59,17 @@ const DashboardUpload = ({
         onClick={handleClick}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        className="border border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer hover:bg-gray-50 transition"
+        onDragLeave={handleDragLeave}
+        className={`group relative cursor-pointer overflow-hidden rounded-2xl border border-dashed p-8 text-center transition-all duration-300 ${
+          isDragActive
+            ? "border-indigo-400 bg-indigo-50 shadow-inner"
+            : "border-indigo-200 bg-gradient-to-br from-indigo-50/60 to-blue-50/60 hover:border-indigo-300"
+        }`}
       >
-        <UploadCloud className="mx-auto text-purple-500" size={28} />
-        <p className="mt-3 text-sm text-gray-700">Drag and drop files here</p>
-        <p className="text-xs text-gray-400">or click to browse</p>
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <UploadCloud className={`mx-auto ${isDragActive ? "scale-110 text-indigo-600" : "text-indigo-500"} relative transition-transform duration-300`} size={30} />
+        <p className="relative mt-3 text-sm font-medium text-slate-700">Drag and drop files here</p>
+        <p className="relative text-xs text-slate-500">or click to browse</p>
 
         <input
           type="file"
@@ -67,19 +82,34 @@ const DashboardUpload = ({
 
       {files.length > 0 && (
         <div className="mt-4 space-y-2">
+          {uploading ? (
+            <div className="rounded-xl border border-indigo-100 bg-indigo-50/80 p-3">
+              <div className="mb-2 flex items-center justify-between text-xs font-semibold text-indigo-700">
+                <span>Uploading files</span>
+                <span>{uploadProgress}%</span>
+              </div>
+              <div className="h-2 w-full overflow-hidden rounded-full bg-indigo-100">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-blue-500 transition-all duration-200"
+                  style={{ width: `${uploadProgress}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
+
           {files.map((file, index) => (
             <div
               key={`${file.name}-${index}`}
-              className="flex items-center justify-between rounded-md bg-gray-50 px-3 py-2"
+              className="flex items-center justify-between rounded-xl border border-slate-200 bg-white/80 px-3 py-2.5"
             >
               <div className="min-w-0">
-                <p className="truncate text-sm text-gray-700">{file.name}</p>
-                <p className="text-xs text-gray-400">{formatFileSize(file.size)}</p>
+                <p className="truncate text-sm font-medium text-slate-700">{file.name}</p>
+                <p className="text-xs text-slate-500">{formatFileSize(file.size)}</p>
               </div>
               <button
                 type="button"
                 onClick={() => onRemoveFile(index)}
-                className="ml-3 rounded p-1 text-gray-500 hover:bg-gray-200 hover:text-gray-700"
+                className="ml-3 rounded-lg p-1 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-700"
                 aria-label="Remove file"
               >
                 <X size={16} />
@@ -90,8 +120,8 @@ const DashboardUpload = ({
           <button
             type="button"
             onClick={onUpload}
-            disabled={uploading}
-            className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-md bg-purple-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-70"
+            disabled={uploading || isUploadDisabled}
+            className="btn-primary mt-2 w-full"
           >
             {uploading ? <Loader2 size={16} className="animate-spin" /> : null}
             {uploading ? "Uploading..." : "Upload Files"}

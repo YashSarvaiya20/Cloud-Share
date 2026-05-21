@@ -1,54 +1,69 @@
 import React from "react";
 import { useUser } from "@clerk/clerk-react";
-import { User } from "lucide-react";
+import { User, Sparkles } from "lucide-react";
 import { SIDE_MENU_DATA } from "../assets/data";
 import { useNavigate, useLocation } from "react-router-dom";
 
-const SideMenu = ({activeMenu}) => {
+const SideMenu = ({activeMenu, isMobile = false, onNavigate}) => {
   const { user } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
 
   return (
-    <div className="w-64 h-[calc(100vh-61px)] bg-white border-r border-gray-200/50 p-5 sticky top-[61px] z-20">
-      {/* Profile */}
-      <div className="flex flex-col items-center justify-center gap-3 mt-3 mb-7">
+    <aside className={`${isMobile ? "h-full" : "sticky top-[86px] h-[calc(100vh-110px)]"} w-72 glass-card p-4`}> 
+      <div className="mb-6 rounded-2xl border border-slate-200/80 bg-white p-4">
+        <div className="flex items-center gap-3">
         {user?.imageUrl ? (
           <img
             src={user.imageUrl}
             alt="Profile"
-            className="w-20 h-20 rounded-full object-cover"
+            className="h-12 w-12 rounded-2xl object-cover"
           />
         ) : (
-          <User className="w-20 h-20 text-gray-400" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100">
+            <User className="h-6 w-6 text-slate-500" />
+          </div>
         )}
 
-        <h5 className="text-gray-950 font-medium leading-6">
-          {user?.fullName || ""}
-        </h5>
+          <div className="min-w-0">
+            <h5 className="truncate text-sm font-semibold text-slate-900">{user?.fullName || "Your Workspace"}</h5>
+            <p className="truncate text-xs text-slate-500">{user?.primaryEmailAddress?.emailAddress || "Personal plan"}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-50 to-blue-50 px-3 py-2 text-xs font-medium text-indigo-700">
+          <Sparkles size={14} />
+          CloudShare SaaS Workspace
+        </div>
       </div>
 
-      {/* Menu */}
-      {SIDE_MENU_DATA.map((item) => {
+      <nav className="space-y-1.5">
+        {SIDE_MENU_DATA.map((item) => {
         const isActive = location.pathname === item.path;
 
         return (
           <button
             key={item.id}
-            onClick={() => navigate(item.path)}
+            onClick={() => {
+              navigate(item.path);
+              if (onNavigate) onNavigate();
+            }}
             className={`
-              w-full flex items-center gap-4 text-[15px]
-              py-3 px-6 rounded-lg mb-3
+              w-full group flex items-center gap-3 text-sm
+              px-3 py-2.5 rounded-xl
               transition-all duration-200
-              ${isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-100"}
+              ${isActive
+                ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500 text-white shadow-lg shadow-indigo-500/25"
+                : "text-slate-700 hover:bg-slate-100"}
             `}
           >
-            <item.icon className="text-xl" />
-            {item.label}
+            <item.icon className={`h-[18px] w-[18px] ${isActive ? "text-white" : "text-slate-500 group-hover:text-slate-700"}`} />
+            <span className="font-medium">{item.label}</span>
           </button>
         );
       })}
-    </div>
+      </nav>
+    </aside>
   );
 };
 

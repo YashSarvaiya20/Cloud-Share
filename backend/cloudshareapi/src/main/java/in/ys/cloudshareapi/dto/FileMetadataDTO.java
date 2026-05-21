@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 public class FileMetadataDTO {
     private String id;
+    private String publicId;
     private String name;
     private String type;
     private String clerkId;

@@ -5,13 +5,14 @@ import { useAuth } from '@clerk/clerk-react';
 import { UserCreditsContext } from '../context/UserCreditsContext';
 import axios from 'axios';
 import apiEndpoint from '../util/apiEndpoint';
-import { AlertCircle } from 'react-feather';
+import { AlertCircle, Sparkles, UploadCloud } from 'lucide-react';
 
 const Upload = ()=>{
     const [files,setFiles]=React.useState([]);
     const [uploading,setUploading]=React.useState(false);
     const [message,setMessage]=React.useState("");
     const [messageType,setMessageType]=React.useState("");
+    const [uploadProgress, setUploadProgress] = React.useState(0);
     const {getToken}=useAuth();
     const {credits,setCredits}=React.useContext(UserCreditsContext);
     const MAX_FILE_SIZE=5;
@@ -43,6 +44,7 @@ const Upload = ()=>{
             return;
         }
         setUploading(true);
+        setUploadProgress(0);
         setMessage("Uploading files...");
         setMessageType("info");
 
@@ -58,12 +60,18 @@ const Upload = ()=>{
                 headers:{
                     Authorization:`Bearer ${token}`,
                     "Content-Type":"multipart/form-data"
-                }
+                },
+                onUploadProgress: (progressEvent) => {
+                    const total = progressEvent.total || 1;
+                    const percent = Math.min(100, Math.round((progressEvent.loaded * 100) / total));
+                    setUploadProgress(percent);
+                },
             });
+            const uploadedCount = response.data?.files?.length ?? files.length;
             if(response.data && response.data.remainingCredits!==undefined){ 
                 setCredits(response.data.remainingCredits);
             }
-            setMessage("Files uploaded successfully!");
+            setMessage(`${uploadedCount} file${uploadedCount === 1 ? "" : "s"} uploaded successfully!`);
             setMessageType("success");
             setFiles([]);
         }catch(error){
@@ -72,6 +80,7 @@ const Upload = ()=>{
             setMessageType("error");
         }finally{
             setUploading(false);
+            setUploadProgress(0);
         }
     }
 
@@ -79,19 +88,47 @@ const Upload = ()=>{
     
     return (
         <DashboardLayout activeMenu="Upload">
-            <div className='p-6'>
+            <div className='space-y-6 p-1 md:p-2'>
+                <section className='glass-card p-6 md:p-7'>
+                    <h1 className='section-title'>Upload Center</h1>
+                    <p className='section-subtitle mt-1'>Drop files, track progress, and publish shareable links in seconds.</p>
+
+                    <div className='mt-5 grid gap-3 sm:grid-cols-3'>
+                        <div className='surface-card p-4'>
+                            <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                                <UploadCloud size={14} />
+                                Queue
+                            </div>
+                            <p className='mt-2 text-2xl font-bold text-slate-900'>{files.length}</p>
+                        </div>
+                        <div className='surface-card p-4'>
+                            <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                                <Sparkles size={14} />
+                                Credits Left
+                            </div>
+                            <p className='mt-2 text-2xl font-bold text-slate-900'>{credits}</p>
+                        </div>
+                        <div className='surface-card p-4'>
+                            <div className='text-xs font-semibold uppercase tracking-wide text-slate-500'>Upload Limit</div>
+                            <p className='mt-2 text-2xl font-bold text-slate-900'>{MAX_FILE_SIZE} / batch</p>
+                        </div>
+                    </div>
+                </section>
+
                 {message && (
-                    <div className={`mb-6 p-4 items-center rounded-lg flex gap-3 ${messageType==='success' ? 'bg-green-50 text-green-700' : messageType === 'error' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
+                    <div className={`p-4 items-center rounded-2xl border flex gap-3 text-sm font-medium ${messageType==='success' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : messageType === 'error' ? 'border-red-100 bg-red-50 text-red-700' : 'border-indigo-100 bg-indigo-50 text-indigo-700'}`}>
                         {messageType==='error' && <AlertCircle size={20} />}
                         {message}
                     </div>
                 )}
+
                 <UploadBox
                     files={files}
                     onFileChange={handleFileChange}
                     onRemoveFile={handleRemoveFile}
                     onUpload={handleUpload}
                     uploading={uploading}
+                    uploadProgress={uploadProgress}
                     remainingCredits={credits}
                     isUploadDisabled={isUploadDisabled}
                 />

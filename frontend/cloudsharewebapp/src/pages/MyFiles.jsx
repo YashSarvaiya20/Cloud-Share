@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { List, Grid, Globe, Download, Trash, File, Lock, Copy } from 'react-feather';
-import { Eye } from 'lucide-react';
+import { Eye, Search, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layout/DashboardLayout';
 import { useAuth } from '@clerk/clerk-react';
@@ -15,9 +15,12 @@ import { File as FileIcon } from 'react-feather';
 import apiEndpoint from '../util/apiEndpoint';
 import ConfirmationDialog from '../components/ConfirmationDailog';
 import LinkShareModal from '../components/LinkShareModal';
+import { formatCompactDate, formatFileSize, getFileTypeMeta } from '../util/fileUi';
 const MyFiles=()=>{
     const [files, setFiles] = useState([]);
     const [viewMode, setViewMode] = useState('list'); // 'list' or 'grid'
+    const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
     const {getToken,isLoaded} = useAuth();
     const navigate=useNavigate();
     const [deleteConfirmation, setDeleteConfirmation] = useState({
@@ -31,6 +34,7 @@ const MyFiles=()=>{
     });
     // fetch files from server
     const fetchFiles = async () => {
+        setLoading(true);
     try {
         const token = await getToken();
 
@@ -52,6 +56,8 @@ const MyFiles=()=>{
         console.error("Error fetching files from server:", error);
         toast.error("Error fetching files from server");
         setFiles([]); // never leave undefined
+    } finally {
+        setLoading(false);
     }
 };
 
@@ -152,42 +158,59 @@ useEffect(() => {
         fetchFiles();
     }
 }, [isLoaded]);
-const getFileIcon = (file) => {
-        const extension = file.name.split('.').pop().toLowerCase();
-        if(['jpg','jpeg','png','gif','webp','svg'].includes(extension)){
-            return <Image size={24} className="text-purple-500" />;
-        }
-        if(['mp4','webm','mav','avi','mkv'].includes(extension)){
-            return <Video size={24} className="text-blue-500" />;
-        }
-        if(['mp3','wav','ogg','flac','m4a'].includes(extension)){
-            return <Music size={24} className="text-green-500" />;
-        }
-        if(['pdf','doc','docx','xls','xlsx','ppt','pptx','txt','rtf'].includes(extension)){
-            return <FileText size={24} className="text-amber-500" />;
-        }
-        return <FileIcon size={24} className="text-purple-500" />;
-     }
+const filteredFiles = files.filter((file) =>
+    String(file.name || "").toLowerCase().includes(searchQuery.toLowerCase())
+);
+
     return (
         <DashboardLayout activeMenu="MyFiles">
-            <div className='p-6'>
-                <div className='flex justify-between items-center mb-6'>
-                    <h2 className='text-2xl font-bold'> My Files {Array.isArray(files) ? files.length : 0}</h2>
-                    <div className='flex items-center gap-3'>
-                        <List size={24} className={`transition-colors cursor-pointer ${viewMode === 'list' ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`} onClick={() => setViewMode('list')} />
-                        <Grid size={24} className={`transition-colors cursor-pointer ${viewMode === 'grid' ? 'text-blue-600' : 'text-gray-400 hover:text-gray-600'}`} onClick={() => setViewMode('grid')} />
+            <div className='space-y-6 p-1 md:p-2'>
+                <section className='glass-card p-6 md:p-7'>
+                    <div className='flex flex-col gap-4 md:flex-row md:items-center md:justify-between'>
+                        <div>
+                            <h2 className='section-title'>My Files ({Array.isArray(files) ? files.length : 0})</h2>
+                            <p className='section-subtitle mt-1'>Manage visibility, share links, and download your cloud assets.</p>
+                        </div>
+
+                        <div className='flex items-center gap-2'>
+                            <button type='button' className={`rounded-xl p-2 transition-colors ${viewMode === 'list' ? 'bg-indigo-100 text-indigo-700' : 'bg-white text-slate-500 hover:bg-slate-100'}`} onClick={() => setViewMode('list')}>
+                                <List size={20} />
+                            </button>
+                            <button type='button' className={`rounded-xl p-2 transition-colors ${viewMode === 'grid' ? 'bg-indigo-100 text-indigo-700' : 'bg-white text-slate-500 hover:bg-slate-100'}`} onClick={() => setViewMode('grid')}>
+                                <Grid size={20} />
+                            </button>
+                        </div>
                     </div>
-                </div>
-                {files.length === 0 ? (
-                    <div className='bg-white rounded-lg shadow p-12 flex flex-col items-center justify-center'>
-                        <File size={60} className="text-purple-300 mb-4" />
-                        <h3 className='text-lg font-medium text-gray-700 mb-2'>No Files uploaded yet</h3>
-                        <p className='text-gray-500 text-center max-w-md mb-6'>Start uploading your files to see them listed here. you can upload documents, images, and other files to store and manage them securely.</p>
-                        <button onClick={() => navigate('/upload')} className='px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors'>Go to Upload </button>
+
+                    <div className='mt-4 flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2'>
+                        <Search size={16} className='text-slate-400' />
+                        <input
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder='Search files by name...'
+                            className='w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400'
+                        />
+                    </div>
+                </section>
+
+                {loading ? (
+                    <div className='surface-card p-5'>
+                        <div className='space-y-3'>
+                            <div className='skeleton h-16 w-full' />
+                            <div className='skeleton h-16 w-full' />
+                            <div className='skeleton h-16 w-[92%]' />
+                        </div>
+                    </div>
+                ) : filteredFiles.length === 0 ? (
+                    <div className='glass-card p-12 text-center'>
+                        <File size={56} className="mx-auto mb-4 text-indigo-300" />
+                        <h3 className='text-lg font-semibold text-slate-700 mb-2'>No files found</h3>
+                        <p className='mx-auto mb-6 max-w-md text-sm text-slate-500'>Upload documents, images, and media to keep everything organized and shareable.</p>
+                        <button onClick={() => navigate('/upload')} className='btn-primary'>Go to Upload</button>
                     </div>
                 ) : (viewMode === 'grid' ? (
                     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6'>
-                        {files.map((file) => (
+                        {filteredFiles.map((file) => (
                             <FileCard key={file.id} file={file} 
                                 onDelete={openDeleteConfirmation}
                                 onTogglePublic={togglePublic}
@@ -197,46 +220,51 @@ const getFileIcon = (file) => {
                         ))}
                     </div>
             ) : 
-                (<div  className='overflow-x-auto bg-white rounded-lg shadow'>
-                    <table className='min-w-full'>
-                        <thead className='bg-gray-50 border-b border-gray-200'>
+                (<div  className='glass-card overflow-x-auto px-3 py-3'>
+                    <table className='w-full min-w-[1120px] border-separate border-spacing-y-2'>
+                        <thead>
                         <tr> 
-                            <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Name</th>
-                             <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Size</th>
-                              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Uploaded</th>
-                               <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Sharing</th>
-                                <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>Actions</th>
+                            <th className='px-6 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'>Name</th>
+                             <th className='px-6 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'>Size</th>
+                              <th className='px-6 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'>Uploaded</th>
+                               <th className='px-6 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'>Sharing</th>
+                                <th className='min-w-[180px] px-6 py-2 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider'>Actions</th>
                         </tr>
                         </thead>
-                        <tbody className='divide-y divide-gray-200'>
-                            {files.map((file) => (
-                                <tr key={file.id} className='hover:bg-gray-50 transition-colors' >
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800'>
+                        <tbody>
+                            {filteredFiles.map((file) => {
+                                const fileType = getFileTypeMeta(file.name);
+                                const FileTypeIcon = fileType.icon;
+
+                                return (
+                                <tr key={file.id} className='bg-white shadow-[0_8px_25px_-20px_rgba(15,23,42,0.45)] transition-colors hover:bg-slate-50/70' >
+                                    <td className='rounded-l-2xl px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-800'>
                                         <div className='flex items-center gap-2'>
-                                           {getFileIcon(file)}
-                                            {file.name}
+                                           <FileTypeIcon size={18} className={fileType.iconClass} />
+                                            <span className='max-w-[240px] truncate'>{file.name}</span>
+                                            <span className={`soft-badge ${fileType.badgeClass}`}>{fileType.label}</span>
                                         </div>
                                     </td>
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm  text-gray-600'>
-                                        {(file.size / (1024 * 1024)).toFixed(1)} KB
+                                    <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-600'>
+                                        {formatFileSize(file.size)}
                                     </td>
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm  text-gray-600'>
-                                        {new Date(file.uploadedAt).toLocaleDateString()}
+                                    <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-600'>
+                                        {formatCompactDate(file.uploadedAt)}
                                     </td>
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm  text-gray-600'>
+                                    <td className='px-6 py-4 whitespace-nowrap text-sm text-slate-600'>
                                        <div className='flex items-center gap-4'>
-                                        <button onClick={() => togglePublic(file)} className='flex items-center gap-2 cursor-pointer group'>
+                                        <button onClick={() => togglePublic(file)} className='flex items-center gap-2 cursor-pointer group rounded-full bg-slate-100 px-3 py-1.5'>
                                             {file.isPublic ? (
                                                 <>
                                                 <Globe size={16} className="text-green-500" />
-                                                <span className='group-hover:underline'>
+                                                <span className='text-xs font-semibold text-green-700'>
                                                     Public
                                                 </span>
                                                 </>
                                             ):(
                                                 <>
                                                     <Lock size={16} className="text-gray-500" />
-                                                     <span className='group-hover:underline'>
+                                                     <span className='text-xs font-semibold text-slate-700'>
                                                          Private
                                                      </span>
                                                 </>
@@ -246,35 +274,35 @@ const getFileIcon = (file) => {
                                             file.isPublic && (
                                                 <button 
                                                 onClick={()=>openShareModal(file.id)}
-                                                className='flex items-center gap-2 cursor-pointer group text-blue-600'>
+                                                className='flex items-center gap-2 cursor-pointer group text-blue-600 rounded-full bg-blue-50 px-3 py-1.5'>
                                                     <Copy size={16} />
-                                                    <span className='group-hover:underline'>
+                                                    <span className='text-xs font-semibold'>
                                                         Share Link
                                                     </span>
                                                 </button>)
                                         }
                                        </div>
                                     </td>
-                                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium'>  
+                                    <td className='rounded-r-2xl px-6 py-4 whitespace-nowrap text-sm font-medium min-w-[180px]'>  
                                         <div className='grid grid-cols-3 gap-4'>
                                             <div className='flex justify-center'>
                                                 <button 
                                                 onClick={()=>handleDownload(file)}
                                                 title='Download'
-                                                className='text-gray-500 hover:text-blue-600'>
+                                                className='rounded-full bg-slate-100 p-2 text-slate-500 hover:text-blue-600'>
                                                     <Download size={18} />
                                                 </button>
                                             </div>
                                             <div className='flex justify-center'>
                                                 <button
                                                 onClick={()=>openDeleteConfirmation(file.id)}
-                                                 title='Delete' className='text-gray-500 hover:text-red-600'>
+                                                 title='Delete' className='rounded-full bg-slate-100 p-2 text-slate-500 hover:text-red-600'>
                                                     <Trash size={18} />
                                                 </button>
                                             </div>
                                             <div className="flex justify-center">
                                                 <a href={`/file/${file.id}`}
-                                                className="text-gray-500 hover:text-blue-600"
+                                                className="rounded-full bg-slate-100 p-2 text-slate-500 hover:text-blue-600"
                                                 title="View file"
                                                 target="_blank"
                                                 rel="noreferrer"
@@ -285,8 +313,7 @@ const getFileIcon = (file) => {
                                         </div>
                                     </td>
                                 </tr>
-                                
-                            ))} 
+                                )})} 
                             </tbody>
                         </table>
                     </div>))}

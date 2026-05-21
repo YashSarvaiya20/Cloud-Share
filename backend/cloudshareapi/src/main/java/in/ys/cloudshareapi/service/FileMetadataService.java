@@ -3,23 +3,18 @@ package in.yashsarvaiya.cloudshareapi.service;
 import in.yashsarvaiya.cloudshareapi.document.FileMetadataDocument;
 import in.yashsarvaiya.cloudshareapi.document.ProfileDocument;
 import in.yashsarvaiya.cloudshareapi.dto.FileMetadataDTO;
+import in.yashsarvaiya.cloudshareapi.model.CloudinaryUploadResponse;
 import in.yashsarvaiya.cloudshareapi.repository.FileMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
@@ -31,12 +26,13 @@ public class FileMetadataService {
     private final ProfileService profileService;
     private final UserCreditsService userCreditsService;
     private final FileMetadataRepository fileMetadataRepository;
+        private final CloudinaryService cloudinaryService;
 
     // ---------------- UPLOAD FILES ----------------
 
 
 
-    public List<FileMetadataDTO> uploadFiles(MultipartFile[] files) throws IOException {
+        public List<FileMetadataDTO> uploadFiles(MultipartFile[] files) {
 
 
         ProfileDocument currentProfile = profileService.getCurrentProfile();
@@ -48,57 +44,35 @@ public class FileMetadataService {
             );
         }
 
-        Path uploadPath = Paths.get("upload")
-                .toAbsolutePath()
-                .normalize();
+        List<CloudinaryUploadResponse> cloudinaryResponses = cloudinaryService.uploadFiles(files);
 
-        Files.createDirectories(uploadPath);
+        return java.util.stream.IntStream.range(0, files.length)
+                .mapToObj(index -> {
+                    CloudinaryUploadResponse uploadResponse = cloudinaryResponses.get(index);
 
-        return List.of(files).stream().map(file -> {
-            try {
-                                String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-                                String fileName = UUID.randomUUID() +
-                                                (StringUtils.hasText(extension) ? "." + extension : "");
+                    FileMetadataDocument document = FileMetadataDocument.builder()
+                            .publicId(uploadResponse.getPublicId())
+                            .fileLocation(uploadResponse.getSecureUrl())
+                            .name(uploadResponse.getOriginalFilename())
+                            .size(uploadResponse.getBytes())
+                            .type(uploadResponse.getContentType())
+                            .clerkId(currentProfile.getClerkId())
+                            .isPublic(false)
+                            .uploadedAt(LocalDateTime.now())
+                            .build();
 
-                Path targetLocation = uploadPath.resolve(fileName);
-                Files.copy(
-                        file.getInputStream(),
-                        targetLocation,
-                        StandardCopyOption.REPLACE_EXISTING
-                );
+                    FileMetadataDocument saved = fileMetadataRepository.save(document);
+                    userCreditsService.consumeCredit();
 
-                FileMetadataDocument document = FileMetadataDocument.builder()
-                        .fileLocation(targetLocation.toString())
-                        .name(file.getOriginalFilename())
-                        .size(file.getSize())
-                        .type(file.getContentType())
-                        .clerkId(currentProfile.getClerkId())
-                        .isPublic(false)
-                        .uploadedAt(LocalDateTime.now())
-                        .build();
-
-                // consume credit AFTER successful save
-                FileMetadataDocument saved = fileMetadataRepository.save(document);
-                userCreditsService.consumeCredit();
-
-                return mapToDTO(saved);
-
-            } catch (IOException e) {
-                throw new ResponseStatusException(
-                        INTERNAL_SERVER_ERROR,
-                        "Failed to upload file"
-                );
-            }
-        }).collect(Collectors.toList());
+                    return mapToDTO(saved);
+                })
+                .collect(Collectors.toList());
     }
 
     // ---------------- GET USER FILES ----------------
     public List<FileMetadataDTO> getFiles() {
 
         ProfileDocument currentProfile = profileService.getCurrentProfile();
-        System.out.println("➡ Reached service layer");
-        System.out.println("➡ ClerkId = " + currentProfile.getClerkId());
-
         return fileMetadataRepository
                 .findByClerkId(currentProfile.getClerkId())
                 .stream()
@@ -164,7 +138,7 @@ public class FileMetadataService {
         }
 
         ProfileDocument currentProfile = profileService.getCurrentProfile();
-        if (!file.getClerkId().equals(currentProfile.getClerkId())) {
+                if (!Objects.equals(file.getClerkId(), currentProfile.getClerkId())) {
             throw new ResponseStatusException(FORBIDDEN, "File does not belong to current user");
         }
     }
@@ -179,21 +153,18 @@ public class FileMetadataService {
                         new ResponseStatusException(NOT_FOUND, "File not found")
                 );
 
-        if (!file.getClerkId().equals(currentProfile.getClerkId())) {
+        if (!Objects.equals(file.getClerkId(), currentProfile.getClerkId())) {
             throw new ResponseStatusException(
                     FORBIDDEN,
                     "File does not belong to current user"
             );
         }
 
-        try {
-            Files.deleteIfExists(Paths.get(file.getFileLocation()));
-            fileMetadataRepository.deleteById(id);
-        } catch (IOException e) {
-            throw new ResponseStatusException(
-                    INTERNAL_SERVER_ERROR,
-                    "Error deleting file"
-            );
+                try {
+                        cloudinaryService.deleteFile(file.getPublicId());
+                        fileMetadataRepository.deleteById(id);
+                } catch (Exception e) {
+                        throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Error deleting file");
         }
     }
 
@@ -207,7 +178,7 @@ public class FileMetadataService {
                         new ResponseStatusException(NOT_FOUND, "File not found")
                 );
 
-        if (!file.getClerkId().equals(currentProfile.getClerkId())) {
+        if (!Objects.equals(file.getClerkId(), currentProfile.getClerkId())) {
             throw new ResponseStatusException(
                     FORBIDDEN,
                     "File does not belong to current user"
@@ -222,6 +193,7 @@ public class FileMetadataService {
     private FileMetadataDTO mapToDTO(FileMetadataDocument file) {
         return FileMetadataDTO.builder()
                 .id(file.getId())
+                .publicId(file.getPublicId())
                 .fileLocation(file.getFileLocation())
                 .name(file.getName())
                 .size(file.getSize())

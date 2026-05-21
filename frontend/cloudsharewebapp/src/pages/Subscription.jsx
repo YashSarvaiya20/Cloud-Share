@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useContext, useState } from 'react';
 import DashboardLayout from '../layout/DashboardLayout';
 import { Check, CreditCard, AlertCircle } from 'react-feather';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Sparkles, ShieldCheck } from 'lucide-react';
 import { UserCreditsContext } from '../context/UserCreditsContext';
 import apiEndpoint from '../util/apiEndpoint';
 import { useAuth } from '@clerk/clerk-react';
@@ -194,43 +194,61 @@ const Subscription = () => {
 
     return (
        <DashboardLayout activeMenu="Subscription">
-            <div className='p-6'>
-            <h1 className='text-2xl font-bold mb-4'>Subscription Plans</h1>
-            <p className='text-gray-600 mb-6'>Choose a plan that works for you</p>
+            <div className='space-y-6 p-1 md:p-2'>
+            <section className='glass-card p-6 md:p-7'>
+              <h1 className='section-title mb-1'>Subscription Plans</h1>
+              <p className='section-subtitle'>Choose a plan that scales with your workflow.</p>
+
+              <div className='mt-5 grid gap-3 sm:grid-cols-2'>
+                <div className='surface-card p-4'>
+                  <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                    <CreditCard size={14} />
+                    Current Credits
+                  </div>
+                  <p className='mt-2 text-2xl font-bold text-slate-900'>{credits}</p>
+                </div>
+                <div className='surface-card p-4'>
+                  <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
+                    <ShieldCheck size={14} />
+                    Billing
+                  </div>
+                  <p className='mt-2 text-sm font-semibold text-slate-800'>Secure Razorpay checkout</p>
+                </div>
+              </div>
+            </section>
+
             {message&& (
-                <div className={`mb-6 p-4 rounded-lg flex items-center gap-3 ${messageType === 'error' ? 'bg-red-50 text-red-700' : messageType==='success' ? 'bg-green-50 text-green-700' : 'bg-blue-50 text-blue-700'}`}>
+                <div className={`p-4 rounded-2xl border flex items-center gap-3 text-sm font-medium ${messageType === 'error' ? 'border-red-100 bg-red-50 text-red-700' : messageType==='success' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-indigo-100 bg-indigo-50 text-indigo-700'}`}>
                     {messageType === 'error' && <AlertCircle size={20}/>}
                     {message}
                 </div>
             )}
 
-            <div className='flex flex-col md:flex-row gap-6 mb-8'>
-                <div className='bg-blue-50 p-6 rounded-lg'>
-                    <div className='flex items-center gap-2 mb-4'>
-                        <CreditCard className='text-purple-500'/>
-                        <h2 className='text-lg font-medium'>Current Credits: <span className='font-bold text-purple-500'>{credits}</span></h2>
-                    </div>
-                    <p className='text-sm text-gray-600 mt-2'>You can upload {credits} more files with your current credits.</p>
-                </div>
-            </div>
-            <div className='grid md:grid-cols-2 gap-6'>
+            <div className='grid gap-6 lg:grid-cols-3'>
                 {plans.map((plan)=>(
-                    <div key={plan.id} className={`border rounded-xl p-6 ${plan.recommended ? 'border-purple-200 bg-purple-50 shadow-md' : 'border-gray-200 bg-white'}`}>
-                        {plan.recommended && <div className='inline-block bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded-bl-lg'>Recommended</div>}
-                        <h3 className='text-xl font-bold mb-4'>{plan.name}</h3>
-                        <div className='mt-2 mb-4'>
-                            <span className='text-3xl font-bold'>₹{plan.price}</span>
-                            <span className=' text-gray-500'> for {plan.credits}</span>
+                    <div key={plan.id} className={`relative overflow-hidden rounded-2xl border p-6 transition-all duration-200 ${plan.recommended ? 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-[0_20px_35px_-25px_rgba(79,70,229,0.7)]' : 'border-slate-200 bg-white hover:border-indigo-100 hover:shadow-[0_20px_35px_-25px_rgba(59,130,246,0.4)]'}`}>
+                        {plan.recommended && (
+                          <div className='absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-bold text-white'>
+                            <Sparkles size={12} /> Recommended
+                          </div>
+                        )}
+
+                        <h3 className='text-xl font-bold text-slate-900 mb-2'>{plan.name}</h3>
+                        <div className='mb-4'>
+                            <span className='text-3xl font-bold text-slate-900'>₹{plan.price}</span>
+                            <span className=' text-slate-500'> for {plan.credits} credits</span>
                         </div>
-                        <ul className='mb-6 space-y-3'>
+
+                        <ul className='mb-6 space-y-2.5'>
                             {plan.features.map((feature,index)=>(
-                                <li key={index} className='flex items-center'>
+                                <li key={index} className='flex items-center text-sm text-slate-700'>
                                     <Check size={18} className='text-green-500 mr-2 flex-shrink-0'/>
                                    <span>{feature}</span>
                                 </li>
                             ))}
                         </ul>
-                        <button onClick={() => handlePurchase(plan)} disabled={processingPayment} className={`w-full py-2 rounded-md transition-colors font-medium ${plan.recommended ?  'bg-purple-500 hover:bg-purple-600 text-white':'bg-white border border-purple-500 text-purple-500 hover:bg-purple-50'} disabled:opacity-50 flex items-center justify-center gap-2`}>
+
+                        <button onClick={() => handlePurchase(plan)} disabled={processingPayment} className={`w-full ${plan.recommended ? 'btn-primary' : 'btn-secondary'} disabled:opacity-50`}>
                             {processingPayment ? (
                                 <>
                                 <Loader2 size={16} className='animate-spin' />
@@ -244,9 +262,9 @@ const Subscription = () => {
                 ))}
                 </div>
 
-                <div className='mt-8 bg-gray-50 p-4 rounded-lg border border-gray-200'>
-                    <h3 className='font-medium mb-2'>How credits work</h3>
-                    <p className='text-sm text-gray-600'>
+                <div className='surface-card p-5'>
+                  <h3 className='font-semibold text-slate-900 mb-2'>How credits work</h3>
+                  <p className='text-sm text-slate-600'>
                         Each file upload consumes 1 credit.New users start with 5 free credits.
                         Credits never expire and can be used at any time. If you run out of credits, you can purchase more through one of our plans above.
                     </p>
