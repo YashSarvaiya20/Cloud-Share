@@ -7,6 +7,7 @@ import apiEndpoint from '../util/apiEndpoint';
 import { useAuth } from '@clerk/clerk-react';
 import axios from 'axios';
 import { useUser } from '@clerk/clerk-react';
+import { useTheme } from '../context/ThemeContext.jsx';
 
 const Subscription = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
@@ -15,10 +16,28 @@ const Subscription = () => {
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const { credits, fetchUserCredits, updateCredits } = useContext(UserCreditsContext);
   const { getToken } = useAuth();
+  const { isDark } = useTheme();
   const razorpayScriptRef = useRef(null);
+  const metricCardClass = isDark ? 'surface-card border-slate-700 bg-slate-900/70' : 'surface-card';
+  const infoCardClass = isDark ? 'surface-card border-slate-700 bg-slate-900/80' : 'surface-card';
+  const infoMessageClass = isDark
+    ? 'border-slate-700 bg-slate-900 text-slate-100'
+    : 'border-amber-100 bg-amber-50 text-amber-800';
+
+  const showPaymentError = (error) => {
+    const messageText = error?.response?.data?.message || error?.message || 'Failed to initiate payment. Please try again later.';
+    if (messageText.toLowerCase().includes('razorpay is not configured')) {
+      setMessage('Payments are temporarily unavailable because the Razorpay backend keys are not configured. Please contact the administrator.');
+      setMessageType('info');
+      return;
+    }
+
+    setMessage(messageText);
+    setMessageType('error');
+  };
 
   const {user}=useUser();
-    const plans = [
+  const plans = [
   {
     id: "basic",
     name: "Basic",
@@ -28,7 +47,7 @@ const Subscription = () => {
       "Upload up to 100 files",
       "Access to basic features",
       "Community support",
-    ],
+      ],
     recommended: false,
   },
   {
@@ -184,9 +203,8 @@ const Subscription = () => {
       } else {
         throw new Error('Razorpay SDK not loaded');
       }
-       }catch(error){
-        setMessage(error?.response?.data?.message || error?.message || 'Failed to initiate payment. Please try again later.');
-        setMessageType('error');
+      }catch(error){
+        showPaymentError(error);
        }finally{
          setProcessingPayment(false);
        }
@@ -200,14 +218,14 @@ const Subscription = () => {
               <p className='section-subtitle'>Choose a plan that scales with your workflow.</p>
 
               <div className='mt-5 grid gap-3 sm:grid-cols-2'>
-                <div className='surface-card p-4'>
+                <div className={`${metricCardClass} p-4`}>
                   <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
                     <CreditCard size={14} />
                     Current Credits
                   </div>
                   <p className='mt-2 text-2xl font-bold text-slate-900'>{credits}</p>
                 </div>
-                <div className='surface-card p-4'>
+                <div className={`${metricCardClass} p-4`}>
                   <div className='flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500'>
                     <ShieldCheck size={14} />
                     Billing
@@ -218,7 +236,7 @@ const Subscription = () => {
             </section>
 
             {message&& (
-                <div className={`p-4 rounded-2xl border flex items-center gap-3 text-sm font-medium ${messageType === 'error' ? 'border-red-100 bg-red-50 text-red-700' : messageType==='success' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : 'border-indigo-100 bg-indigo-50 text-indigo-700'}`}>
+              <div className={`p-4 rounded-2xl border flex items-center gap-3 text-sm font-medium ${messageType === 'error' ? 'border-red-100 bg-red-50 text-red-700' : messageType === 'success' ? 'border-emerald-100 bg-emerald-50 text-emerald-700' : infoMessageClass}`}>
                     {messageType === 'error' && <AlertCircle size={20}/>}
                     {message}
                 </div>
@@ -226,29 +244,33 @@ const Subscription = () => {
 
             <div className='grid gap-6 lg:grid-cols-3'>
                 {plans.map((plan)=>(
-                    <div key={plan.id} className={`relative overflow-hidden rounded-2xl border p-6 transition-all duration-200 ${plan.recommended ? 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-[0_20px_35px_-25px_rgba(79,70,229,0.7)]' : 'border-slate-200 bg-white hover:border-indigo-100 hover:shadow-[0_20px_35px_-25px_rgba(59,130,246,0.4)]'}`}>
+                <div key={plan.id} className={`relative overflow-hidden rounded-2xl border p-6 transition-all duration-200 ${plan.recommended ? (isDark ? 'border-indigo-500/40 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 shadow-[0_20px_35px_-25px_rgba(8,15,34,0.85)]' : 'border-indigo-200 bg-gradient-to-br from-indigo-50 to-purple-50 shadow-[0_20px_35px_-25px_rgba(79,70,229,0.7)]') : (isDark ? 'border-slate-700 bg-slate-900 hover:border-indigo-500/40 hover:shadow-[0_20px_35px_-25px_rgba(8,15,34,0.85)]' : 'border-slate-200 bg-white hover:border-indigo-100 hover:shadow-[0_20px_35px_-25px_rgba(59,130,246,0.4)]')}`}>
                         {plan.recommended && (
                           <div className='absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-indigo-600 px-2.5 py-1 text-[11px] font-bold text-white'>
                             <Sparkles size={12} /> Recommended
                           </div>
                         )}
 
-                        <h3 className='text-xl font-bold text-slate-900 mb-2'>{plan.name}</h3>
+                        <h3 className={`mb-2 text-xl font-bold ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>{plan.name}</h3>
                         <div className='mb-4'>
-                            <span className='text-3xl font-bold text-slate-900'>₹{plan.price}</span>
-                            <span className=' text-slate-500'> for {plan.credits} credits</span>
+                          <span className={`text-3xl font-bold ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>₹{plan.price}</span>
+                          <span className={`text-slate-500 ${isDark ? 'text-slate-400' : ''}`}> for {plan.credits} credits</span>
                         </div>
 
                         <ul className='mb-6 space-y-2.5'>
                             {plan.features.map((feature,index)=>(
-                                <li key={index} className='flex items-center text-sm text-slate-700'>
+                            <li key={index} className={`flex items-center text-sm ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                                     <Check size={18} className='text-green-500 mr-2 flex-shrink-0'/>
                                    <span>{feature}</span>
                                 </li>
                             ))}
                         </ul>
 
-                        <button onClick={() => handlePurchase(plan)} disabled={processingPayment} className={`w-full ${plan.recommended ? 'btn-primary' : 'btn-secondary'} disabled:opacity-50`}>
+                        <button
+                          onClick={() => handlePurchase(plan)}
+                          disabled={processingPayment}
+                          className={`w-full ${plan.recommended ? 'btn-primary' : 'btn-secondary'} disabled:opacity-50`}
+                        >
                             {processingPayment ? (
                                 <>
                                 <Loader2 size={16} className='animate-spin' />
@@ -262,9 +284,9 @@ const Subscription = () => {
                 ))}
                 </div>
 
-                <div className='surface-card p-5'>
-                  <h3 className='font-semibold text-slate-900 mb-2'>How credits work</h3>
-                  <p className='text-sm text-slate-600'>
+                <div className={`${infoCardClass} p-5`}>
+                  <h3 className={`mb-2 font-semibold ${isDark ? 'text-slate-100' : 'text-slate-900'}`}>How credits work</h3>
+                  <p className={`text-sm ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
                         Each file upload consumes 1 credit.New users start with 5 free credits.
                         Credits never expire and can be used at any time. If you run out of credits, you can purchase more through one of our plans above.
                     </p>

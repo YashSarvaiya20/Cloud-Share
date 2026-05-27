@@ -1,9 +1,9 @@
 import React from 'react';
-import { Copy, Download, Eye, Trash2 } from 'react-feather';
-import { Globe, Lock } from 'lucide-react';
+import { Copy, Download, Trash2 } from 'react-feather';
+import { Globe, Lock, QrCode, ScanEye, History } from 'lucide-react';
 import { formatCompactDate, formatFileSize, getFileTypeMeta } from '../util/fileUi';
 
-const FileCard = ({ file,onDelete,onTogglePublic,onDownload,onShareLink }) => {
+const FileCard = ({ file,onDelete,onTogglePublic,onDownload,onShareLink,onQrShare,onPreview,onHistory }) => {
     const fileType = getFileTypeMeta(file.name);
     const FileTypeIcon = fileType.icon;
 
@@ -29,17 +29,27 @@ const FileCard = ({ file,onDelete,onTogglePublic,onDownload,onShareLink }) => {
 
                 <div className="absolute inset-0 flex items-end justify-center bg-gradient-to-t from-slate-900/75 via-slate-900/40 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                     <div className="flex gap-2">
-                        {file.isPublic && (
                         <button
-                            onClick={()=>onShareLink(file.id)}
-                            title="Copy link"
-                            className="rounded-full bg-white p-2.5 text-purple-600 shadow-md transition-all hover:scale-105 hover:bg-purple-50 hover:text-purple-700" >
-                            <Copy size={16} />
+                          onClick={()=>onShareLink?.(file)}
+                          title="Create share link"
+                          className="rounded-full bg-white p-2.5 text-purple-600 shadow-md transition-all hover:scale-105 hover:bg-purple-50 hover:text-purple-700" >
+                          <Copy size={16} />
                         </button>
+                        <button
+                            onClick={()=>onQrShare?.(file)}
+                            title="QR share"
+                            className="rounded-full bg-white p-2.5 text-indigo-600 transition-colors hover:bg-white hover:text-indigo-700">
+                            <QrCode size={16} />
+                        </button>
+                        {onPreview ? (
+                          <button onClick={() => onPreview(file)} title='Preview' className='rounded-full bg-white p-2.5 text-slate-700 transition-colors hover:bg-white hover:text-slate-900'>
+                            <ScanEye size={16} />
+                          </button>
+                        ) : (
+                          <a href={`/file/${file.id}`} title='View file' target="_blank" rel="noreferrer" className='rounded-full bg-white p-2.5 text-slate-700 transition-colors hover:bg-white hover:text-slate-900'>
+                            <ScanEye size={16} />
+                          </a>
                         )}
-                        <a href={`/file/${file.id}`} title='View file' target="_blank" rel="noreferrer" className='rounded-full bg-white p-2.5 text-slate-700 transition-colors hover:bg-white hover:text-slate-900'>
-                            <Eye size={16} />
-                        </a>
                         <button
                         onClick={()=>onDownload(file)} 
                         title='Download'
@@ -52,6 +62,10 @@ const FileCard = ({ file,onDelete,onTogglePublic,onDownload,onShareLink }) => {
                         className='rounded-full bg-white p-2.5 text-amber-600 transition-colors hover:bg-white hover:text-amber-700'>
                             {file.isPublic ? <Lock size={16} /> : <Globe size={16} />}
                        </button>
+
+                         <button onClick={()=>onHistory?.(file)} title="Version history" className='rounded-full bg-white p-2.5 text-violet-600 transition-colors hover:bg-white hover:text-violet-700'>
+                        <History size={16} />
+                         </button>
 
                        <button onClick={()=>onDelete(file.id)} title="Delete" className='rounded-full bg-white p-2.5 text-red-600 transition-colors hover:bg-white hover:text-red-700'>
                         <Trash2 size={16} />

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import React from "react";
+import { collectDroppedFiles } from '../util/folderUpload.js';
 const DashboardUpload = ({
   files = [],
   onFileChange,
@@ -23,11 +24,11 @@ const DashboardUpload = ({
     onFileChange({ target: { files: selectedFiles } });
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     setIsDragActive(false);
-    const droppedFiles = Array.from(e.dataTransfer.files || []);
-    emitSelectedFiles(droppedFiles);
+    const droppedFiles = await collectDroppedFiles(e.dataTransfer);
+    emitSelectedFiles(droppedFiles.map((item) => item.file));
   };
 
   const handleDragOver = (e) => {
@@ -69,11 +70,13 @@ const DashboardUpload = ({
         <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 via-purple-500/5 to-blue-500/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
         <UploadCloud className={`mx-auto ${isDragActive ? "scale-110 text-indigo-600" : "text-indigo-500"} relative transition-transform duration-300`} size={30} />
         <p className="relative mt-3 text-sm font-medium text-slate-700">Drag and drop files here</p>
-        <p className="relative text-xs text-slate-500">or click to browse</p>
+        <p className="relative text-xs text-slate-500">or click to browse files and folders</p>
 
         <input
           type="file"
           multiple
+          webkitdirectory=""
+          directory=""
           ref={fileInputRef}
           onChange={onFileChange}
           className="hidden"

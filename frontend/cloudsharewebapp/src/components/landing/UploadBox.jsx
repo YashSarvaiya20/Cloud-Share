@@ -1,6 +1,7 @@
 import React from "react";
 import { Upload, X, File } from "react-feather";
 import { Loader2 } from "lucide-react";
+import { collectDroppedFiles } from '../../util/folderUpload.js';
 
 const UploadBox = ({
   files = [],
@@ -19,10 +20,11 @@ const UploadBox = ({
     onFileChange({ target: { files: selectedFiles } });
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     setDragActive(false);
-    emitSelectedFiles(Array.from(e.dataTransfer.files || []));
+    const dropped = await collectDroppedFiles(e.dataTransfer);
+    emitSelectedFiles(dropped.map((item) => item.file));
   };
 
   return (
@@ -49,14 +51,16 @@ const UploadBox = ({
       >
         <Upload size={40} className={`mb-3 transition-transform duration-300 ${dragActive ? "scale-110 text-indigo-600" : "text-indigo-500"}`} />
         <p className="font-medium text-slate-700">
-          Click to upload or drag & drop
+          Click to upload files or folders
         </p>
         <p className="mt-1 text-sm text-slate-500">
-          Multiple files supported
+          Multiple files and nested folders supported
         </p>
         <input
           type="file"
           multiple
+          webkitdirectory=""
+          directory=""
           className="hidden"
           onChange={onFileChange}
         />

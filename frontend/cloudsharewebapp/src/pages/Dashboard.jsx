@@ -1,6 +1,7 @@
 import { useAuth } from "@clerk/clerk-react";
 import DashboardLayout from "../layout/DashboardLayout";
 import React, { Suspense, lazy } from "react";
+import { motion } from "framer-motion";
 import { useState, useEffect, useContext, useCallback } from "react";
 import { Activity, Clock3, Loader2, UploadCloud } from "lucide-react";
 import axios from "axios";
@@ -9,7 +10,7 @@ import DashboardUpload from "../components/DashboardUpload";
 import RecentFiles from "../components/RecentFiles";
 import { UserCreditsContext } from "../context/UserCreditsContext";
 import { formatFileSize } from "../util/fileUi";
-import { motion } from "framer-motion";
+import { getUploadPathForFile } from "../util/folderUpload.js";
 
 const StorageCharts = lazy(() => import("../components/dashboard/StorageCharts"));
 
@@ -92,6 +93,7 @@ const Dashboard = () => {
     const formData = new FormData();
     uploadFile.forEach((file) => {
       formData.append("files", file);
+      formData.append("paths", getUploadPathForFile(file));
     });
 
     try {
@@ -145,29 +147,27 @@ const Dashboard = () => {
           </p>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-            <motion.div className="surface-card p-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
+            <div className="surface-card p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Recent Files</p>
               <p className="mt-2 text-2xl font-bold text-slate-900">{files.length}</p>
-            </motion.div>
-            <motion.div className="surface-card p-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+            </div>
+            <div className="surface-card p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Quick Upload Slots</p>
               <p className="mt-2 text-2xl font-bold text-slate-900">{remainingUploads}</p>
-            </motion.div>
-            <motion.div className="surface-card p-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+            </div>
+            <div className="surface-card p-4">
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <Activity size={13} />
                 Storage Used (Recent)
               </div>
               <p className="mt-2 text-2xl font-bold text-slate-900">{formatFileSize(totalSize)}</p>
               <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-slate-200">
-                <motion.div
+                <div
                   className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-blue-500"
-                  initial={{ width: 0 }}
-                  animate={{ width: `${usagePct}%` }}
-                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  style={{ width: `${usagePct}%` }}
                 />
               </div>
-            </motion.div>
+            </div>
             <motion.div className="surface-card p-4" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}>
               <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
                 <Clock3 size={13} />

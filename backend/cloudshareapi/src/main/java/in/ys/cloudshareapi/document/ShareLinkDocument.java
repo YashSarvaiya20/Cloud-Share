@@ -5,26 +5,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Document(collection = "files")
+@Document(collection = "share_links")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class FileMetadataDocument {
+public class ShareLinkDocument {
     @Id
     private String id;
-    private String publicId;
-    private String name;
-    private String type;
+
+    @Indexed(unique = true)
+    private String token;
+
+    @Indexed
+    private String fileId;
+
+    @Indexed
     private String clerkId;
-    private Long size;
-    private Boolean isPublic;
-    private String fileLocation;
-    private LocalDateTime uploadedAt;
-    private String folderPath;
-    // versioning removed: fields intentionally omitted
+
+    private LocalDateTime createdAt;
+    private LocalDateTime expiresAt;
+    private LocalDateTime lastAccessedAt;
+    private Integer accessCount;
 }

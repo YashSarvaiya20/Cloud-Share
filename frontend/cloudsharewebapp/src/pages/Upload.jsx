@@ -6,6 +6,7 @@ import { UserCreditsContext } from '../context/UserCreditsContext';
 import axios from 'axios';
 import apiEndpoint from '../util/apiEndpoint';
 import { AlertCircle, Sparkles, UploadCloud } from 'lucide-react';
+import { getUploadPathForFile } from '../util/folderUpload.js';
 
 const Upload = ()=>{
     const [files,setFiles]=React.useState([]);
@@ -49,7 +50,10 @@ const Upload = ()=>{
         setMessageType("info");
 
         const formData=new FormData();
-        files.forEach((file)=>formData.append("files",file));
+        files.forEach((file)=>{
+            formData.append("files",file);
+            formData.append("paths", getUploadPathForFile(file));
+        });
 
         try{
             const token = await getToken();

@@ -27,8 +27,9 @@ public class CloudinaryUploadController {
     private final UserCreditsService userCreditsService;
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Map<String, Object>> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-        List<FileMetadataDTO> uploadedFiles = fileMetadataService.uploadFiles(files);
+    public ResponseEntity<Map<String, Object>> uploadFiles(@RequestParam("files") MultipartFile[] files,
+                                                          @RequestParam(value = "paths", required = false) List<String> paths) {
+        List<FileMetadataDTO> uploadedFiles = fileMetadataService.uploadFiles(files, paths);
         UserCredits finalCredits = userCreditsService.getUserCredits();
 
         Map<String, Object> response = new HashMap<>();

@@ -5,7 +5,6 @@ import { SignedIn } from '@clerk/clerk-react';
 import { SignedOut } from '@clerk/clerk-react';
 import { Toaster } from 'react-hot-toast';
 import { UserCreditsProvider } from './context/UserCreditsContext.jsx';
-import { AnimatePresence, motion } from 'framer-motion';
 import { Navigate, useLocation } from 'react-router-dom';
 
 const Landing = lazy(() => import('./pages/Landing.jsx'));
@@ -15,6 +14,7 @@ const MyFiles = lazy(() => import('./pages/MyFiles.jsx'));
 const Subscpription = lazy(() => import('./pages/Subscription.jsx'));
 const Transactions = lazy(() => import('./pages/Transactions.jsx'));
 const PublicFileView = lazy(() => import('./pages/PublicFileViex.jsx'));
+const ShareFileView = lazy(() => import('./pages/ShareFileView.jsx'));
 const SignInPage = lazy(() => import('./pages/SignInPage.jsx'));
 const SignUpPage = lazy(() => import('./pages/SignUpPage.jsx'));
 
@@ -28,23 +28,13 @@ const RouteFallback = () => (
   </div>
 );
 
-const PageTransition = ({ children }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 12 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -8 }}
-    transition={{ duration: 0.28, ease: 'easeOut' }}
-  >
-    {children}
-  </motion.div>
-);
+const PageTransition = ({ children }) => <>{children}</>;
 
 const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
+    <Routes location={location} key={location.pathname}>
         <Route path='/' element={<PageTransition><Suspense fallback={<RouteFallback/>}><Landing/></Suspense></PageTransition>}/>
         <Route path='/sign-in' element={
           <>
@@ -88,10 +78,10 @@ const AnimatedRoutes = () => {
           <SignedOut><Navigate to="/sign-in" replace /></SignedOut>
           </>
         }/>
+        <Route path='/share/:token' element={<PageTransition><Suspense fallback={<RouteFallback/>}><ShareFileView/></Suspense></PageTransition>} />
         <Route path='file/:fileId' element={<PageTransition><Suspense fallback={<RouteFallback/>}><PublicFileView/></Suspense></PageTransition>} />
         <Route path='/*' element={<Navigate to="/sign-in" replace />}/>
-      </Routes>
-    </AnimatePresence>
+    </Routes>
   );
 };
 

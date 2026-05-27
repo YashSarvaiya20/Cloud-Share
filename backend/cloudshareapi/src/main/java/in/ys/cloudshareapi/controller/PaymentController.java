@@ -6,10 +6,13 @@ import in.yashsarvaiya.cloudshareapi.dto.PaymentVerificationDTO;
 import in.yashsarvaiya.cloudshareapi.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +20,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     private final PaymentService paymentService;
+
+    @GetMapping("/status")
+    public ResponseEntity<?> paymentStatus() {
+        boolean configured = paymentService.isRazorpayConfigured();
+        return ResponseEntity.ok(Map.of(
+                "configured", configured,
+                "message", configured
+                        ? "Razorpay is configured"
+                        : "Razorpay is not configured"
+        ));
+    }
+
     @PostMapping("/create-order")
     public ResponseEntity<?> createOrder(@RequestBody PaymentDTO paymentDTO){
         // call a service method to create the order

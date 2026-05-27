@@ -33,11 +33,27 @@ public class PaymentService {
     @Value("${razorpay.key.secret}")
     private String razorpayKeySecret;
 
+        public boolean isRazorpayConfigured() {
+                return razorpayKeyId != null
+                                && razorpayKeySecret != null
+                                && !razorpayKeyId.isBlank()
+                                && !razorpayKeySecret.isBlank()
+                                && !"changeme".equalsIgnoreCase(razorpayKeyId.trim())
+                                && !"changeme".equalsIgnoreCase(razorpayKeySecret.trim());
+        }
+
     // =========================
     // CREATE ORDER
     // =========================
     public PaymentDTO createOrder(PaymentDTO paymentDTO) {
         try {
+                        if (!isRazorpayConfigured()) {
+                                return PaymentDTO.builder()
+                                                .success(false)
+                                                .message("Razorpay is not configured. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET in the backend environment.")
+                                                .build();
+                        }
+
             ProfileDocument profile = profileService.getCurrentProfile();
             String clerkId = profile.getClerkId();
 

@@ -45,6 +45,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
+                // Allow framing (we handle frame-security for preview endpoints)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+
                 // ✅ ADD YOUR JWT FILTER
                 .addFilterBefore(
                         clerkJwtAuthFilter,

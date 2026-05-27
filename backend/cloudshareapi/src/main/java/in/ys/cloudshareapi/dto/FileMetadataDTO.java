@@ -21,4 +21,6 @@ public class FileMetadataDTO {
     private Boolean isPublic;
     private String fileLocation;
     private LocalDateTime uploadedAt;
+    private String folderPath;
+    // versioning removed: fields intentionally omitted
 }
