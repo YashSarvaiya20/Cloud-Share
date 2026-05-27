@@ -1,0 +1,307 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< in.yashsarvaiya:cloudshareapi >--------------------
+[INFO] Building cloudshareapi 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.1:run (default-cli) > test-compile @ cloudshareapi >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ cloudshareapi ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ cloudshareapi ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 37 source files with javac [debug parameters release 17] to target\classes
+[INFO] /D:/Cloud-Share/backend/cloudshareapi/src/main/java/in/ys/cloudshareapi/security/ClerkJwksProvider.java: Some input files use or override a deprecated API.
+[INFO] /D:/Cloud-Share/backend/cloudshareapi/src/main/java/in/ys/cloudshareapi/security/ClerkJwksProvider.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ cloudshareapi ---
+[INFO] skip non existing resourceDirectory D:\Cloud-Share\backend\cloudshareapi\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ cloudshareapi ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] 
+[INFO] <<< spring-boot:4.0.1:run (default-cli) < test-compile @ cloudshareapi <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.1:run (default-cli) @ cloudshareapi ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.1)
+
+2026-05-27T08:38:21.705+05:30  INFO 10808 --- [           main] i.y.c.CloudshareapiApplication           : Starting CloudshareapiApplication using Java 17.0.12 with PID 10808 (D:\Cloud-Share\backend\cloudshareapi\target\classes started by nalin in D:\Cloud-Share\backend\cloudshareapi)
+2026-05-27T08:38:21.711+05:30  INFO 10808 --- [           main] i.y.c.CloudshareapiApplication           : No active profile set, falling back to 1 default profile: "default"
+2026-05-27T08:38:22.773+05:30  INFO 10808 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
+2026-05-27T08:38:22.927+05:30  INFO 10808 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 140 ms. Found 4 MongoDB repository interfaces.
+2026-05-27T08:38:24.017+05:30  INFO 10808 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-05-27T08:38:24.046+05:30  INFO 10808 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-05-27T08:38:24.046+05:30  INFO 10808 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.15]
+2026-05-27T08:38:24.177+05:30  INFO 10808 --- [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 2390 ms
+2026-05-27T08:38:24.869+05:30  INFO 10808 --- [           main] org.mongodb.driver.client                : MongoClient with metadata {"driver": {"name": "mongo-java-driver|spring-boot|sync", "version": "5.6.2"}, "os": {"type": "Windows", "name": "Windows 11", "architecture": "amd64", "version": "10.0"}, "platform": "Java/Oracle Corporation/17.0.12+8-LTS-286"} created with settings MongoClientSettings{readPreference=primary, writeConcern=WriteConcern{w=null, wTimeout=null ms, journal=null}, retryWrites=true, retryReads=true, readConcern=ReadConcern{level=null}, credential=null, transportSettings=null, commandListeners=[], codecRegistry=ProvidersCodecRegistry{codecProviders=[ValueCodecProvider{}, BsonValueCodecProvider{}, DBRefCodecProvider{}, DBObjectCodecProvider{}, DocumentCodecProvider{}, CollectionCodecProvider{}, IterableCodecProvider{}, MapCodecProvider{}, GeoJsonCodecProvider{}, GridFSFileCodecProvider{}, Jsr310CodecProvider{}, JsonObjectCodecProvider{}, BsonCodecProvider{}, com.mongodb.client.model.mql.ExpressionCodecProvider@4bf80c29, com.mongodb.Jep395RecordCodecProvider@2d7637e6, com.mongodb.KotlinCodecProvider@515b9d4a, EnumCodecProvider{}]}, loggerSettings=LoggerSettings{maxDocumentLength=1000}, clusterSettings={hosts=[localhost:27017], srvServiceName=mongodb, mode=SINGLE, requiredClusterType=UNKNOWN, requiredReplicaSetName='null', serverSelector='null', clusterListeners='[]', serverSelectionTimeout='30000 ms', localThreshold='15 ms'}, socketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=0, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, heartbeatSocketSettings=SocketSettings{connectTimeoutMS=10000, readTimeoutMS=10000, receiveBufferSize=0, proxySettings=ProxySettings{host=null, port=null, username=null, password=null}}, connectionPoolSettings=ConnectionPoolSettings{maxSize=100, minSize=0, maxWaitTimeMS=120000, maxConnectionLifeTimeMS=0, maxConnectionIdleTimeMS=0, maintenanceInitialDelayMS=0, maintenanceFrequencyMS=60000, connectionPoolListeners=[], maxConnecting=2}, serverSettings=ServerSettings{heartbeatFrequencyMS=10000, minHeartbeatFrequencyMS=500, serverMonitoringMode=AUTO, serverListeners='[]', serverMonitorListeners='[]'}, sslSettings=SslSettings{enabled=false, invalidHostNameAllowed=false, context=null}, applicationName='null', compressorList=[], uuidRepresentation=UNSPECIFIED, serverApi=null, autoEncryptionSettings=null, dnsClient=null, inetAddressResolver=null, contextProvider=null, timeoutMS=null}
+2026-05-27T08:38:24.933+05:30  INFO 10808 --- [localhost:27017] org.mongodb.driver.cluster               : Monitor thread successfully connected to server with description ServerDescription{address=localhost:27017, type=STANDALONE, cryptd=false, state=CONNECTED, ok=true, minWireVersion=0, maxWireVersion=27, maxDocumentSize=16777216, logicalSessionTimeoutMinutes=30, roundTripTimeNanos=40391400, minRoundTripTimeNanos=0}
+2026-05-27T08:38:25.889+05:30  WARN 10808 --- [           main] .s.a.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 8117a93f-a53c-4076-846e-225c3432a522
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-05-27T08:38:25.901+05:30  INFO 10808 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-05-27T08:38:26.491+05:30  INFO 10808 --- [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/api/v1.0'
+2026-05-27T08:38:26.502+05:30  INFO 10808 --- [           main] i.y.c.CloudshareapiApplication           : Started CloudshareapiApplication in 5.419 seconds (process running for 6.036)
+2026-05-27T08:39:45.496+05:30  INFO 10808 --- [nio-8080-exec-1] o.a.c.c.C.[.[localhost].[/api/v1.0]      : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-05-27T08:39:45.496+05:30  INFO 10808 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-05-27T08:39:45.499+05:30  INFO 10808 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+STREAM REQUEST PUBLIC_ID: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+getDownloadableFileByPublicId: resolving -> 'cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f'
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Lookup by publicId exact succeeded: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Resolved document for stream: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=c7e01b7ab3f3f2b527402e29095f45390e0ac02b&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851392
+Remote fetch status=404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=c7e01b7ab3f3f2b527402e29095f45390e0ac02b&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851392
+Remote fetch failed with status 404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=c7e01b7ab3f3f2b527402e29095f45390e0ac02b&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851392
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+All remote proxy attempts failed for publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+STREAM REQUEST PUBLIC_ID: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+getDownloadableFileByPublicId: resolving -> 'cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f'
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Lookup by publicId exact succeeded: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Resolved document for stream: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=ad84f883587dfee0588ac6b000f2bc05d99a623e&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851399
+Remote fetch status=404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=ad84f883587dfee0588ac6b000f2bc05d99a623e&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851399
+Remote fetch failed with status 404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=ad84f883587dfee0588ac6b000f2bc05d99a623e&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779851399
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+All remote proxy attempts failed for publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+STREAM REQUEST PUBLIC_ID: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+getDownloadableFileByPublicId: resolving -> 'cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f'
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Lookup by publicId exact succeeded: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Resolved document for stream: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=4ebd191192383bcc41df07e584dcff9849ba46bc&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889072
+Remote fetch status=404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=4ebd191192383bcc41df07e584dcff9849ba46bc&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889072
+Remote fetch failed with status 404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=4ebd191192383bcc41df07e584dcff9849ba46bc&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889072
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+All remote proxy attempts failed for publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+STREAM REQUEST PUBLIC_ID: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+getDownloadableFileByPublicId: resolving -> 'cloudshare/de3279fb-050d-499a-89dc-ac509b530796'
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Lookup by publicId exact succeeded: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Resolved document for stream: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Remote fetch status=200 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+STREAM REQUEST PUBLIC_ID: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+getDownloadableFileByPublicId: resolving -> 'cloudshare/de3279fb-050d-499a-89dc-ac509b530796'
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Lookup by publicId exact succeeded: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Resolved document for stream: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Remote fetch status=200 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+STREAM REQUEST PUBLIC_ID: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+getDownloadableFileByPublicId: resolving -> 'cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f'
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Lookup by publicId exact succeeded: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Resolved document for stream: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=6b97103b95ac23f799cd7903398890fa8da6a187&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889124
+Remote fetch status=404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=6b97103b95ac23f799cd7903398890fa8da6a187&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889124
+Remote fetch failed with status 404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=6b97103b95ac23f799cd7903398890fa8da6a187&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889124
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+All remote proxy attempts failed for publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+STREAM REQUEST PUBLIC_ID: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+getDownloadableFileByPublicId: resolving -> 'cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f'
+Decoded publicId: cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Lookup by publicId exact succeeded: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+Resolved document for stream: publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849665/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=272066d805734ee1fe9fb9749429e97f75540563&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889128
+Remote fetch status=404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=272066d805734ee1fe9fb9749429e97f75540563&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889128
+Remote fetch failed with status 404 for url=https://api.cloudinary.com/v1_1/def53ds7x/image/download?signature=272066d805734ee1fe9fb9749429e97f75540563&api_key=995298982948343&format=pdf&public_id=cloudshare%2F35f50b4e-7e5d-4302-b56e-509151b0c70f&timestamp=1779889128
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/image/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 401 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/raw/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/authenticated/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/s--G6T6aTDN--/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Trying Cloudinary fallback URL: https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch status=404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+Remote fetch failed with status 404 for url=https://res.cloudinary.com/def53ds7x/video/upload/v1/cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f.pdf
+All remote proxy attempts failed for publicId=cloudshare/35f50b4e-7e5d-4302-b56e-509151b0c70f
+STREAM REQUEST PUBLIC_ID: cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df
+Decoded publicId: cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df
+getDownloadableFileByPublicId: resolving -> 'cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df'
+Decoded publicId: cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df
+Lookup by publicId exact succeeded: publicId=cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df
+Resolved document for stream: publicId=cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849725/cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df.jpg
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849725/cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df.jpg
+Remote fetch status=200 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849725/cloudshare/82c70cd0-5634-4a3e-ad79-5b9e297910df.jpg
+STREAM REQUEST PUBLIC_ID: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+getDownloadableFileByPublicId: resolving -> 'cloudshare/de3279fb-050d-499a-89dc-ac509b530796'
+Decoded publicId: cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Lookup by publicId exact succeeded: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796
+Resolved document for stream: publicId=cloudshare/de3279fb-050d-499a-89dc-ac509b530796, fileLocation=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Resolved Cloudinary URL: https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+Remote fetch status=200 for url=https://res.cloudinary.com/def53ds7x/image/upload/v1779849871/cloudshare/de3279fb-050d-499a-89dc-ac509b530796.png
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  10:55 h
+[INFO] Finished at: 2026-05-27T19:34:12+05:30
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:4.0.1:run (default-cli) on project cloudshareapi: Process terminated with exit code: -1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException
